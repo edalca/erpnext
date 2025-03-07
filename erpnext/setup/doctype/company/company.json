@@ -14,14 +14,12 @@
   "abbr",
   "default_currency",
   "country",
-  "is_group",
   "default_holiday_list",
   "cb0",
   "default_letter_head",
   "tax_id",
   "domain",
   "date_of_establishment",
-  "parent_company",
   "company_info",
   "company_logo",
   "date_of_incorporation",
@@ -35,9 +33,6 @@
   "address_html",
   "registration_info",
   "registration_details",
-  "lft",
-  "rgt",
-  "old_parent",
   "accounts_tab",
   "section_break_28",
   "create_chart_of_accounts_based_on",
@@ -119,7 +114,8 @@
   "expenses_included_in_valuation",
   "manufacturing_section",
   "default_operating_cost_account",
-  "dashboard_tab"
+  "dashboard_tab",
+  "amended_from"
  ],
  "fields": [
   {
@@ -146,15 +142,9 @@
    "set_only_once": 1
   },
   {
-   "bold": 1,
-   "default": "0",
-   "fieldname": "is_group",
-   "fieldtype": "Check",
-   "label": "Is Group"
-  },
-  {
    "fieldname": "default_finance_book",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Default Finance Book",
    "options": "Finance Book"
   },
@@ -168,14 +158,7 @@
    "label": "Domain"
   },
   {
-   "fieldname": "parent_company",
-   "fieldtype": "Link",
-   "ignore_user_permissions": 1,
-   "in_list_view": 1,
-   "label": "Parent Company",
-   "options": "Company"
-  },
-  {
+   "allow_on_submit": 1,
    "fieldname": "company_logo",
    "fieldtype": "Attach Image",
    "hidden": 1,
@@ -236,12 +219,14 @@
   {
    "fieldname": "default_letter_head",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Default Letter Head",
    "options": "Letter Head"
   },
   {
    "fieldname": "default_holiday_list",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Default Holiday List",
    "options": "Holiday List"
   },
@@ -284,7 +269,9 @@
   {
    "fieldname": "tax_id",
    "fieldtype": "Data",
-   "label": "Tax ID"
+   "in_list_view": 1,
+   "label": "RTN",
+   "reqd": 1
   },
   {
    "fieldname": "date_of_establishment",
@@ -292,12 +279,14 @@
    "label": "Date of Establishment"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "default_settings",
    "fieldtype": "Section Break",
    "label": "Default Accounts",
    "oldfieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "default_bank_account",
    "fieldtype": "Link",
@@ -309,6 +298,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "default_cash_account",
    "fieldtype": "Link",
@@ -318,6 +308,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "default_receivable_account",
    "fieldtype": "Link",
@@ -329,30 +320,35 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "round_off_account",
    "fieldtype": "Link",
    "label": "Round Off Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "round_off_cost_center",
    "fieldtype": "Link",
    "label": "Round Off Cost Center",
    "options": "Cost Center"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "write_off_account",
    "fieldtype": "Link",
    "label": "Write Off Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "exchange_gain_loss_account",
    "fieldtype": "Link",
    "label": "Exchange Gain / Loss Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "unrealized_exchange_gain_loss_account",
    "fieldtype": "Link",
    "label": "Unrealized Exchange Gain/Loss Account",
@@ -372,6 +368,7 @@
    "label": "Allow Account Creation Against Child Company"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "default_payable_account",
    "fieldtype": "Link",
@@ -389,7 +386,8 @@
    "ignore_user_permissions": 1,
    "label": "Default Cost of Goods Sold Account",
    "no_copy": 1,
-   "options": "Account"
+   "options": "Account",
+   "read_only": 1
   },
   {
    "depends_on": "eval:!doc.__islocal",
@@ -398,9 +396,11 @@
    "ignore_user_permissions": 1,
    "label": "Default Income Account",
    "no_copy": 1,
-   "options": "Account"
+   "options": "Account",
+   "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "default_deferred_revenue_account",
    "fieldtype": "Link",
@@ -410,6 +410,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "default_deferred_expense_account",
    "fieldtype": "Link",
@@ -419,6 +420,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "depends_on": "eval:!doc.__islocal",
    "fieldname": "cost_center",
    "fieldtype": "Link",
@@ -440,7 +442,8 @@
    "fieldname": "payment_terms",
    "fieldtype": "Link",
    "label": "Default Payment Terms Template",
-   "options": "Payment Terms Template"
+   "options": "Payment Terms Template",
+   "read_only": 1
   },
   {
    "depends_on": "eval:!doc.__islocal",
@@ -455,12 +458,14 @@
    "label": "Enable Perpetual Inventory"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "default_inventory_account",
    "fieldtype": "Link",
    "label": "Default Inventory Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "stock_adjustment_account",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
@@ -481,6 +486,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "expenses_included_in_valuation",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
@@ -489,6 +495,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "accumulated_depreciation_account",
    "fieldtype": "Link",
    "label": "Accumulated Depreciation Account",
@@ -500,14 +507,17 @@
    "fieldtype": "Link",
    "label": "Depreciation Expense Account",
    "no_copy": 1,
-   "options": "Account"
+   "options": "Account",
+   "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "series_for_depreciation_entry",
    "fieldtype": "Data",
    "label": "Series for Asset Depreciation Entry (Journal Entry)"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "expenses_included_in_asset_valuation",
    "fieldtype": "Link",
    "label": "Expenses Included In Asset Valuation",
@@ -518,6 +528,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "disposal_account",
    "fieldtype": "Link",
    "label": "Gain/Loss Account on Asset Disposal",
@@ -525,6 +536,7 @@
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "depreciation_cost_center",
    "fieldtype": "Link",
    "label": "Asset Depreciation Cost Center",
@@ -532,12 +544,14 @@
    "options": "Cost Center"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "capital_work_in_progress_account",
    "fieldtype": "Link",
    "label": "Capital Work In Progress Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "asset_received_but_not_billed",
    "fieldtype": "Link",
    "label": "Asset Received But Not Billed",
@@ -555,18 +569,20 @@
    "options": "Role"
   },
   {
+   "allow_on_submit": 1,
    "collapsible": 1,
-   "depends_on": "eval: doc.docstatus == 0 && doc.__islocal != 1",
    "fieldname": "company_info",
    "fieldtype": "Section Break",
    "label": "Address & Contact"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "date_of_incorporation",
    "fieldtype": "Date",
    "label": "Date of Incorporation"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "address_html",
    "fieldtype": "HTML"
   },
@@ -628,32 +644,6 @@
    "oldfieldtype": "Code"
   },
   {
-   "fieldname": "lft",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Lft",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "rgt",
-   "fieldtype": "Int",
-   "hidden": 1,
-   "label": "Rgt",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "old_parent",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "old_parent",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "default_selling_terms",
    "fieldtype": "Link",
    "label": "Default Selling Terms",
@@ -666,12 +656,14 @@
    "options": "Terms and Conditions"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "default_in_transit_warehouse",
    "fieldtype": "Link",
    "label": "Default In-Transit Warehouse",
    "options": "Warehouse"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "unrealized_profit_loss_account",
    "fieldtype": "Link",
    "label": "Unrealized Profit / Loss Account",
@@ -681,7 +673,8 @@
    "fieldname": "default_discount_account",
    "fieldtype": "Link",
    "label": "Default Payment Discount Account",
-   "options": "Account"
+   "options": "Account",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_26",
@@ -704,6 +697,7 @@
    "label": "Enable Provisional Accounting For Non Stock Items"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "default_provisional_account",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
@@ -771,6 +765,7 @@
    "label": "Submit ERR Journals?"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "accounts_tab",
    "fieldtype": "Tab Break",
    "label": "Accounts"
@@ -806,12 +801,14 @@
    "label": "Manufacturing"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "default_operating_cost_account",
    "fieldtype": "Link",
    "label": "Default Operating Cost Account",
    "options": "Account"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "round_off_for_opening",
    "fieldtype": "Link",
    "label": "Round Off for Opening",
@@ -850,14 +847,24 @@
    "fieldtype": "Select",
    "label": "Reconciliation Takes Effect On",
    "options": "Advance Payment Date\nOldest Of Invoice Or Advance\nReconciliation Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Company",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "icon": "fa fa-building",
  "idx": 1,
  "image_field": "company_logo",
- "is_tree": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-01-09 20:12:25.471544",
+ "modified": "2025-03-07 01:13:35.653789",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",
@@ -923,5 +930,6 @@
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],
+ "title_field": "company_name",
  "track_changes": 1
 }

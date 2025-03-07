@@ -5,14 +5,15 @@
     "type": "git",
     "url": "git+https://github.com/edalca/erpnext.git"
   },
+  "type": "module",
   "homepage": "https://erpnext.com",
   "author": "Frappe Technologies Pvt. Ltd.",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/frappe/erpnext/issues"
   },
-  "devDependencies": {},
   "dependencies": {
+    "inputmask": "^5.0.9",
     "onscan.js": "^1.5.2"
   }
 }

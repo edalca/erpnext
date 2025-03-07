@@ -3,47 +3,25 @@
 
 frappe.ui.form.on("Customer", {
 	setup: function (frm) {
-		frm.make_methods = {
-			Quotation: () =>
-				frappe.model.open_mapped_doc({
-					method: "erpnext.selling.doctype.customer.customer.make_quotation",
-					frm: cur_frm,
-				}),
-			Opportunity: () =>
-				frappe.model.open_mapped_doc({
-					method: "erpnext.selling.doctype.customer.customer.make_opportunity",
-					frm: cur_frm,
-				}),
-		};
-
-		frm.add_fetch("lead_name", "company_name", "customer_name");
-		frm.add_fetch("default_sales_partner", "commission_rate", "default_commission_rate");
 		frm.set_query("customer_group", { is_group: 0 });
 		frm.set_query("default_price_list", { selling: 1 });
-		frm.set_query("account", "accounts", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
-			let filters = {
-				account_type: "Receivable",
-				root_type: "Asset",
-				company: d.company,
-				is_group: 0,
-			};
-
-			if (doc.party_account_currency) {
-				$.extend(filters, { account_currency: doc.party_account_currency });
-			}
+		frm.set_query("default_account", function (doc) {
 			return {
-				filters: filters,
+				filters: {
+					account_type: "Receivable",
+					root_type: "Asset",
+					company: doc.company,
+					is_group: 0,
+				},
 			};
 		});
 
-		frm.set_query("advance_account", "accounts", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
+		frm.set_query("advance_account", function (doc) {
 			return {
 				filters: {
 					account_type: "Receivable",
 					root_type: "Liability",
-					company: d.company,
+					company: doc.company,
 					is_group: 0,
 				},
 			};
@@ -85,6 +63,7 @@ frappe.ui.form.on("Customer", {
 				},
 			};
 		});
+
 	},
 	customer_primary_address: function (frm) {
 		if (frm.doc.customer_primary_address) {
@@ -167,14 +146,6 @@ frappe.ui.form.on("Customer", {
 				__("Create")
 			);
 
-			frm.add_custom_button(
-				__("Get Customer Group Details"),
-				function () {
-					frm.trigger("get_customer_group_details");
-				},
-				__("Actions")
-			);
-
 			if (cint(frappe.defaults.get_default("enable_common_party_accounting"))) {
 				frm.add_custom_button(
 					__("Link with Supplier"),
@@ -190,23 +161,23 @@ frappe.ui.form.on("Customer", {
 		} else {
 			frappe.contacts.clear_address_and_contact(frm);
 		}
-
+		const tax_id=frm.fields_dict["tax_id"].input
+		Inputmask('99999999999999').mask(tax_id);
 		var grid = cur_frm.get_field("sales_team").grid;
 		grid.set_column_disp("allocated_amount", false);
 		grid.set_column_disp("incentives", false);
 	},
+	credit_limit(frm){
+		if (frm.doc.credit_limit>0){
+			frm.set_df_property("payment_terms","reqd",1)
+		}else{
+			frm.set_df_property("payment_terms","reqd",0)
+		}
+	},
 	validate: function (frm) {
 		if (frm.doc.lead_name) frappe.model.clear_doc("Lead", frm.doc.lead_name);
 	},
-	get_customer_group_details: function (frm) {
-		frappe.call({
-			method: "get_customer_group_details",
-			doc: frm.doc,
-			callback: function () {
-				frm.refresh();
-			},
-		});
-	},
+
 	show_party_link_dialog: function (frm) {
 		const dialog = new frappe.ui.Dialog({
 			title: __("Select a Supplier"),

@@ -58,8 +58,6 @@ class Item(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
 		from erpnext.stock.doctype.item_barcode.item_barcode import ItemBarcode
 		from erpnext.stock.doctype.item_customer_detail.item_customer_detail import ItemCustomerDetail
 		from erpnext.stock.doctype.item_default.item_default import ItemDefault
@@ -68,7 +66,9 @@ class Item(Document):
 		from erpnext.stock.doctype.item_tax.item_tax import ItemTax
 		from erpnext.stock.doctype.item_variant_attribute.item_variant_attribute import ItemVariantAttribute
 		from erpnext.stock.doctype.uom_conversion_detail.uom_conversion_detail import UOMConversionDetail
+		from frappe.types import DF
 
+		abbr: DF.Data | None
 		allow_alternative_item: DF.Check
 		allow_negative_stock: DF.Check
 		asset_category: DF.Link | None
@@ -78,6 +78,7 @@ class Item(Document):
 		barcodes: DF.Table[ItemBarcode]
 		batch_number_series: DF.Data | None
 		brand: DF.Link | None
+		company: DF.Link
 		country_of_origin: DF.Link | None
 		create_new_batch: DF.Check
 		customer: DF.Link | None
@@ -87,9 +88,7 @@ class Item(Document):
 		default_bom: DF.Link | None
 		default_item_manufacturer: DF.Link | None
 		default_manufacturer_part_no: DF.Data | None
-		default_material_request_type: DF.Literal[
-			"Purchase", "Material Transfer", "Material Issue", "Manufacture", "Customer Provided"
-		]
+		default_material_request_type: DF.Literal["Purchase", "Material Transfer", "Material Issue", "Manufacture", "Customer Provided"]
 		delivered_by_supplier: DF.Check
 		description: DF.TextEditor | None
 		disabled: DF.Check
@@ -115,12 +114,11 @@ class Item(Document):
 		item_code: DF.Data
 		item_defaults: DF.Table[ItemDefault]
 		item_group: DF.Link
-		item_name: DF.Data | None
+		item_name: DF.Data
 		last_purchase_rate: DF.Float
 		lead_time_days: DF.Int
 		max_discount: DF.Float
 		min_order_qty: DF.Float
-		naming_series: DF.Literal["STO-ITEM-.YYYY.-"]
 		no_of_months: DF.Int
 		no_of_months_exp: DF.Int
 		opening_stock: DF.Float

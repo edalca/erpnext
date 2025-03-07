@@ -5,13 +5,6 @@ frappe.provide("erpnext.company");
 
 frappe.ui.form.on("Company", {
 	onload: function (frm) {
-		if (frm.doc.__islocal && frm.doc.parent_company) {
-			frappe.db.get_value("Company", frm.doc.parent_company, "is_group", (r) => {
-				if (!r.is_group) {
-					frm.set_value("parent_company", "");
-				}
-			});
-		}
 		if (!frm.doc.__islocal) {
 			frm.call("check_if_transactions_exist").then((r) => {
 				frm.toggle_enable("default_currency", !r.message);
@@ -20,12 +13,6 @@ frappe.ui.form.on("Company", {
 	},
 	setup: function (frm) {
 		frm.__rename_queue = "long";
-
-		frm.set_query("parent_company", function () {
-			return {
-				filters: { is_group: 1 },
-			};
-		});
 
 		frm.set_query("default_operating_cost_account", function (doc) {
 			return {
@@ -63,12 +50,6 @@ frappe.ui.form.on("Company", {
 		}
 	},
 
-	parent_company: function (frm) {
-		var bool = frm.doc.parent_company ? true : false;
-		frm.set_value("create_chart_of_accounts_based_on", bool ? "Existing Company" : "");
-		frm.set_value("existing_company", bool ? frm.doc.parent_company : "");
-		disbale_coa_fields(frm, bool);
-	},
 
 	date_of_commencement: function (frm) {
 		if (frm.doc.date_of_commencement < frm.doc.date_of_incorporation) {

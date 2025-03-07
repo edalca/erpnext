@@ -8865,7 +8865,7 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 
 <pre>Contract for Customer {{ party_name }}
 
--Valid From : {{ start_date }} 
+-Valid From : {{ start_date }}
 -Valid To : {{ end_date }}
 </pre>
 
@@ -8879,7 +8879,7 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 
 <pre>Contrato para cliente {{ party_name }}
 
--Válido desde : {{ start_date }} 
+-Válido desde : {{ start_date }}
 -Válido hasta : {{ end_date }}
 </pre>
 
@@ -8894,7 +8894,7 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 
 <pre>Delivery Terms for Order number {{ name }}
 
--Order Date : {{ transaction_date }} 
+-Order Date : {{ transaction_date }}
 -Expected Delivery Date : {{ delivery_date }}
 </pre>
 
@@ -8908,7 +8908,7 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 
 <pre>Condiciones de entrega para el número de pedido {{ name }}
 
--Fecha de pedido : {{ transaction_date }} 
+-Fecha de pedido : {{ transaction_date }}
 -Fecha de entrega prevista : {{ delivery_date }}
 </pre>
 
@@ -9011,17 +9011,17 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 "<span class=""h4""><b>Settings</b></span>","<span class=""h4""><b>Configuración</b></span>",
 "<span class=""h4""><b>Shortcuts</b></span>","<span class=""h4""><b>Accesos directos</b></span>",
 "<span class=""h4""><b>Your Shortcuts
-			
-		
-			
-		
-			
+
+
+
+
+
 		</b></span>","<span class=""h4""><b>Tus accesos directos
-			
-		
-			
-		
-			
+
+
+
+
+
 		</b></span>",
 "<span class=""h4""><b>Your Shortcuts</b></span>","<span class=""h4""><b>Tus accesos directos</b></span>",
 <strong>Grand Total:</strong> {0},<strong>Total general:</strong> {0},
@@ -9049,7 +9049,7 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 
         </td>
          <td>
-                   <p><b>Example: </b> doc.doctype == ""Stock Entry"" and doc.purpose == ""Manufacture""</p>    
+                   <p><b>Example: </b> doc.doctype == ""Stock Entry"" and doc.purpose == ""Manufacture""</p>
           </td>
 </tr>
 
@@ -9084,7 +9084,7 @@ Puede usar las etiquetas Jinja <a href=""https://jinja.palletsprojects.com/en/2.
 
         </td>
          <td>
-                   <p><b>Ejemplo: </b> doc.doctype == ""Entrada de stock"" y doc.purpose == ""Fabricación""</p>    
+                   <p><b>Ejemplo: </b> doc.doctype == ""Entrada de stock"" y doc.purpose == ""Fabricación""</p>
           </td>
 </tr>
 
@@ -10047,8 +10047,8 @@ If enabled then system won't override the picked qty / batches / serial numbers.
 "If enabled, a print of this document will be attached to each email","Si está habilitado, se adjuntará una impresión de este documento a cada correo electrónico",
 "If enabled, additional ledger entries will be made for discounts in a separate Discount Account","Si está habilitado, se realizarán entradas contables adicionales para descuentos en una cuenta de descuento separada",
 "If enabled, all files attached to this document will be attached to each email","Si está habilitado, todos los archivos adjuntos a este documento se adjuntarán a cada correo electrónico.",
-"If enabled, do not update serial / batch values in the stock transactions on creation of auto Serial 
- / Batch Bundle. ","Si está habilitado, no actualice los valores de serie/lote en las transacciones de stock al crear automáticamente el paquete de serie 
+"If enabled, do not update serial / batch values in the stock transactions on creation of auto Serial
+ / Batch Bundle. ","Si está habilitado, no actualice los valores de serie/lote en las transacciones de stock al crear automáticamente el paquete de serie
  /lote. ",
 "If enabled, ledger entries will be posted for change amount in POS transactions","Si se activa, se contabilizarán las entradas en el libro mayor para el importe de cambio en las transacciones de TPV",
 "If enabled, the consolidated invoices will have rounded total disabled","Si se activa, las facturas consolidadas tendrán el total redondeado desactivado",
@@ -11268,3 +11268,10 @@ variance,variación,
 {} Open,{} Abierto,
 {} {} is already linked with another {},{} {} ya está vinculado con otro {},
 {} {} is already linked with {} {},{} {} ya está vinculado con {} {},
+Natural Person,Persona Natura,
+Legal Entity,Persona Juridica,
+Type of Establishment,Tipo de Establecimiento,
+Establishment,Establecimiento,
+Commercial Name,Nombre Comercial,
+Sales Discount,Descuento de Ventas,
+Purchase & Sales,Compra & Venta,

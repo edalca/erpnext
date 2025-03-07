@@ -18,7 +18,7 @@ from frappe.utils import cint, cstr, flt, get_formatted_email, today
 from frappe.utils.deprecations import deprecated
 from frappe.utils.user import get_users_with_role
 
-from erpnext.accounts.party import get_dashboard_info, validate_party_accounts
+from erpnext.accounts.party import get_dashboard_info
 from erpnext.controllers.website_list_for_contact import add_role_for_portal_user
 from erpnext.utilities.transaction_base import TransactionBase
 
@@ -30,29 +30,24 @@ class Customer(TransactionBase):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		from erpnext.accounts.doctype.allowed_to_transact_with.allowed_to_transact_with import (
-			AllowedToTransactWith,
-		)
-		from erpnext.accounts.doctype.party_account.party_account import PartyAccount
-		from erpnext.selling.doctype.customer_credit_limit.customer_credit_limit import (
-			CustomerCreditLimit,
-		)
+		from erpnext.accounts.doctype.allowed_to_transact_with.allowed_to_transact_with import AllowedToTransactWith
 		from erpnext.selling.doctype.sales_team.sales_team import SalesTeam
 		from erpnext.utilities.doctype.portal_user.portal_user import PortalUser
+		from frappe.types import DF
 
 		account_manager: DF.Link | None
-		accounts: DF.Table[PartyAccount]
+		advance_account: DF.Link | None
 		companies: DF.Table[AllowedToTransactWith]
-		credit_limits: DF.Table[CustomerCreditLimit]
+		company: DF.Link
+		credit_limit: DF.Currency
 		customer_details: DF.Text | None
 		customer_group: DF.Link | None
 		customer_name: DF.Data
 		customer_pos_id: DF.Data | None
 		customer_primary_address: DF.Link | None
 		customer_primary_contact: DF.Link | None
-		customer_type: DF.Literal["Company", "Individual", "Partnership"]
+		customer_type: DF.Literal["Natural Person", "Legal Entity"]
+		default_account: DF.Link | None
 		default_bank_account: DF.Link | None
 		default_commission_rate: DF.Float
 		default_currency: DF.Link | None
@@ -68,11 +63,8 @@ class Customer(TransactionBase):
 		is_internal_customer: DF.Check
 		language: DF.Link | None
 		lead_name: DF.Link | None
-		loyalty_program: DF.Link | None
-		loyalty_program_tier: DF.Data | None
 		market_segment: DF.Link | None
 		mobile_no: DF.ReadOnly | None
-		naming_series: DF.Literal["CUST-.YYYY.-"]
 		opportunity_name: DF.Link | None
 		payment_terms: DF.Link | None
 		portal_users: DF.Table[PortalUser]
@@ -80,11 +72,8 @@ class Customer(TransactionBase):
 		prospect_name: DF.Link | None
 		represents_company: DF.Link | None
 		sales_team: DF.Table[SalesTeam]
-		salutation: DF.Link | None
 		so_required: DF.Check
-		tax_category: DF.Link | None
-		tax_id: DF.Data | None
-		tax_withholding_category: DF.Link | None
+		tax_id: DF.Data
 		territory: DF.Link | None
 		website: DF.Data | None
 	# end: auto-generated types
@@ -95,7 +84,7 @@ class Customer(TransactionBase):
 		self.load_dashboard_info()
 
 	def load_dashboard_info(self):
-		info = get_dashboard_info(self.doctype, self.name, self.loyalty_program)
+		info = get_dashboard_info(self.doctype, self.name)
 		self.set_onload("dashboard_info", info)
 
 	def autoname(self):
@@ -138,29 +127,17 @@ class Customer(TransactionBase):
 	def validate(self):
 		self.flags.is_new_doc = self.is_new()
 		self.flags.old_lead = self.lead_name
-		validate_party_accounts(self)
 		self.validate_credit_limit_on_change()
-		self.set_loyalty_program()
 		self.check_customer_group_change()
 		self.validate_default_bank_account()
 		self.validate_internal_customer()
 		self.add_role_for_user()
-		self.validate_currency_for_receivable_payable_and_advance_account()
 
-		# set loyalty program tier
-		if frappe.db.exists("Customer", self.name):
-			customer = frappe.get_doc("Customer", self.name)
-			if self.loyalty_program == customer.loyalty_program and not self.loyalty_program_tier:
-				self.loyalty_program_tier = customer.loyalty_program_tier
 
-		if self.sales_team:
-			if sum(member.allocated_percentage or 0 for member in self.sales_team) != 100:
-				frappe.throw(_("Total contribution percentage should be equal to 100"))
 
 	@frappe.whitelist()
 	def get_customer_group_details(self):
 		doc = frappe.get_doc("Customer Group", self.customer_group)
-		self.accounts = []
 		self.credit_limits = []
 		self.payment_terms = self.default_price_list = ""
 
@@ -361,22 +338,6 @@ class Customer(TransactionBase):
 		if frappe.defaults.get_global_default("cust_master_name") == "Customer Name":
 			self.db_set("customer_name", newdn)
 
-	def set_loyalty_program(self):
-		if self.loyalty_program:
-			return
-
-		loyalty_program = get_loyalty_programs(self)
-		if not loyalty_program:
-			return
-
-		if len(loyalty_program) == 1:
-			self.loyalty_program = loyalty_program[0]
-		else:
-			frappe.msgprint(
-				_("Multiple Loyalty Programs found for Customer {}. Please select manually.").format(
-					frappe.bold(self.customer_name)
-				)
-			)
 
 
 @deprecated
@@ -479,37 +440,6 @@ def _set_missing_values(source, target):
 	if contact:
 		target.contact_person = contact[0].parent
 
-
-@frappe.whitelist()
-def get_loyalty_programs(doc):
-	"""returns applicable loyalty programs for a customer"""
-
-	lp_details = []
-	loyalty_programs = frappe.get_all(
-		"Loyalty Program",
-		fields=["name", "customer_group", "customer_territory"],
-		filters={
-			"auto_opt_in": 1,
-			"from_date": ["<=", today()],
-			"ifnull(to_date, '2500-01-01')": [">=", today()],
-		},
-	)
-
-	for loyalty_program in loyalty_programs:
-		if (
-			not loyalty_program.customer_group
-			or doc.customer_group
-			in get_nested_links(
-				"Customer Group", loyalty_program.customer_group, doc.flags.ignore_permissions
-			)
-		) and (
-			not loyalty_program.customer_territory
-			or doc.territory
-			in get_nested_links("Territory", loyalty_program.customer_territory, doc.flags.ignore_permissions)
-		):
-			lp_details.append(loyalty_program.name)
-
-	return lp_details
 
 
 def get_nested_links(link_doctype, link_name, ignore_permissions=False):

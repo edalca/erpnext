@@ -12,13 +12,12 @@ from frappe.contacts.address_and_contact import load_address_and_contact
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.utils import cint, formatdate, get_link_to_form, get_timestamp, today
-from frappe.utils.nestedset import NestedSet, rebuild_tree
-
+from frappe.model.document import Document
 from erpnext.accounts.doctype.account.account import get_account_currency
 from erpnext.setup.setup_wizard.operations.taxes_setup import setup_taxes_and_charges
 
 
-class Company(NestedSet):
+class Company(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -30,6 +29,7 @@ class Company(NestedSet):
 		abbr: DF.Data
 		accumulated_depreciation_account: DF.Link | None
 		allow_account_creation_against_child_company: DF.Check
+		amended_from: DF.Link | None
 		asset_received_but_not_billed: DF.Link | None
 		auto_err_frequency: DF.Literal["Daily", "Weekly", "Monthly"]
 		auto_exchange_rate_revaluation: DF.Check
@@ -78,20 +78,15 @@ class Company(NestedSet):
 		exception_budget_approver_role: DF.Link | None
 		exchange_gain_loss_account: DF.Link | None
 		existing_company: DF.Link | None
+		expenses_included_in_asset_valuation: DF.Link | None
+		expenses_included_in_valuation: DF.Link | None
 		fax: DF.Data | None
-		is_group: DF.Check
-		lft: DF.Int
 		monthly_sales_target: DF.Currency
-		old_parent: DF.Data | None
-		parent_company: DF.Link | None
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None
 		reconcile_on_advance_payment_date: DF.Check
-		reconciliation_takes_effect_on: DF.Literal[
-			"Advance Payment Date", "Oldest Of Invoice Or Advance", "Reconciliation Date"
-		]
+		reconciliation_takes_effect_on: DF.Literal["Advance Payment Date", "Oldest Of Invoice Or Advance", "Reconciliation Date"]
 		registration_details: DF.Code | None
-		rgt: DF.Int
 		round_off_account: DF.Link | None
 		round_off_cost_center: DF.Link | None
 		round_off_for_opening: DF.Link | None
@@ -100,7 +95,7 @@ class Company(NestedSet):
 		stock_adjustment_account: DF.Link | None
 		stock_received_but_not_billed: DF.Link | None
 		submit_err_jv: DF.Check
-		tax_id: DF.Data | None
+		tax_id: DF.Data
 		total_monthly_sales: DF.Currency
 		transactions_annual_history: DF.Code | None
 		unrealized_exchange_gain_loss_account: DF.Link | None
@@ -108,8 +103,6 @@ class Company(NestedSet):
 		website: DF.Data | None
 		write_off_account: DF.Link | None
 	# end: auto-generated types
-
-	nsm_parent_field = "parent_company"
 
 	def onload(self):
 		load_address_and_contact(self, "company")
@@ -150,9 +143,6 @@ class Company(NestedSet):
 		self.validate_perpetual_inventory()
 		self.validate_provisional_account_for_non_stock_items()
 		self.check_country_change()
-		self.check_parent_changed()
-		self.set_chart_of_accounts()
-		self.validate_parent_company()
 
 	def validate_abbr(self):
 		if not self.abbr:
@@ -239,7 +229,6 @@ class Company(NestedSet):
 			)
 
 	def on_update(self):
-		NestedSet.on_update(self)
 		if not frappe.db.sql(
 			"""select name from tabAccount
 				where company=%s and docstatus<2 limit 1""",
@@ -273,11 +262,6 @@ class Company(NestedSet):
 			and self.name in frappe.local.enable_perpetual_inventory
 		):
 			frappe.local.enable_perpetual_inventory[self.name] = self.enable_perpetual_inventory
-
-		if frappe.flags.parent_company_changed:
-			from frappe.utils.nestedset import rebuild_tree
-
-			rebuild_tree("Company", "parent_company")
 
 		frappe.clear_cache()
 
@@ -422,7 +406,6 @@ class Company(NestedSet):
 		frappe.local.flags.ignore_update_nsm = True
 		make_records(records)
 		frappe.local.flags.ignore_update_nsm = False
-		rebuild_tree("Department", "parent_department")
 
 	def validate_coa_input(self):
 		if self.create_chart_of_accounts_based_on == "Existing Company":
@@ -469,19 +452,6 @@ class Company(NestedSet):
 
 		if not self.is_new() and self.country != frappe.get_cached_value("Company", self.name, "country"):
 			frappe.flags.country_change = True
-
-	def set_chart_of_accounts(self):
-		"""If parent company is set, chart of accounts will be based on that company"""
-		if self.parent_company:
-			self.create_chart_of_accounts_based_on = "Existing Company"
-			self.existing_company = self.parent_company
-
-	def validate_parent_company(self):
-		if self.parent_company:
-			is_group = frappe.get_value("Company", self.parent_company, "is_group")
-
-			if not is_group:
-				frappe.throw(_("Parent Company must be a group company"))
 
 	def set_default_accounts(self):
 		default_accounts = {
@@ -623,9 +593,6 @@ class Company(NestedSet):
 		"""
 		Trash accounts and cost centers for this company if no gl entry exists
 		"""
-		NestedSet.validate_if_child_exists(self)
-		frappe.utils.nestedset.update_nsm(self)
-
 		rec = frappe.db.sql("SELECT name from `tabGL Entry` where company = %s", self.name)
 		if not rec:
 			frappe.db.sql(
@@ -693,14 +660,6 @@ class Company(NestedSet):
 		# delete Process Deferred Accounts if no GL Entry found
 		if not frappe.db.get_value("GL Entry", {"company": self.name}):
 			frappe.db.sql("delete from `tabProcess Deferred Accounting` where company=%s", self.name)
-
-	def check_parent_changed(self):
-		frappe.flags.parent_company_changed = False
-
-		if not self.is_new() and self.parent_company != frappe.db.get_value(
-			"Company", self.name, "parent_company"
-		):
-			frappe.flags.parent_company_changed = True
 
 
 def get_name_with_abbr(name, company):
@@ -782,37 +741,6 @@ def cache_companies_monthly_sales_history():
 		update_transactions_annual_history(company)
 	frappe.db.commit()
 
-
-@frappe.whitelist()
-def get_children(doctype, parent=None, company=None, is_root=False):
-	if parent is None or parent == "All Companies":
-		parent = ""
-
-	return frappe.db.sql(
-		f"""
-		select
-			name as value,
-			is_group as expandable
-		from
-			`tabCompany` comp
-		where
-			ifnull(parent_company, "")={frappe.db.escape(parent)}
-		""",
-		as_dict=1,
-	)
-
-
-@frappe.whitelist()
-def add_node():
-	from frappe.desk.treeview import make_tree_args
-
-	args = frappe.form_dict
-	args = make_tree_args(**args)
-
-	if args.parent_company == "All Companies":
-		args.parent_company = None
-
-	frappe.get_doc(args).insert()
 
 
 def get_all_transactions_annual_history(company):

@@ -1,11 +1,11 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors and contributors
+# Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-
+# import frappe
 from frappe.model.document import Document
 
 
-class PartyAccount(Document):
+class SalesDiscount(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,12 +14,7 @@ class PartyAccount(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		account: DF.Link | None
-		advance_account: DF.Link | None
-		company: DF.Link
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
+		discount: DF.Percent
+		user: DF.Link
 	# end: auto-generated types
-
 	pass

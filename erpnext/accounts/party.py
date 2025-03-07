@@ -529,6 +529,47 @@ def validate_party_gle_currency(party_type, party, company, party_account_curren
 		)
 
 
+def validate_party_accounts(doc):
+	from erpnext.controllers.accounts_controller import validate_account_head
+
+	companies = []
+
+	for account in doc.get("accounts"):
+		if account.company in companies:
+			frappe.throw(
+				_("There can only be 1 Account per Company in {0} {1}").format(doc.doctype, doc.name),
+				DuplicatePartyAccountError,
+			)
+		else:
+			companies.append(account.company)
+
+		party_account_currency = frappe.get_cached_value("Account", account.account, "account_currency")
+		if frappe.db.get_default("Company"):
+			company_default_currency = frappe.get_cached_value(
+				"Company", frappe.db.get_default("Company"), "default_currency"
+			)
+		else:
+			company_default_currency = frappe.get_cached_value("Company", account.company, "default_currency")
+
+		validate_party_gle_currency(doc.doctype, doc.name, account.company, party_account_currency)
+
+		if doc.get("default_currency") and party_account_currency and company_default_currency:
+			if (
+				doc.default_currency != party_account_currency
+				and doc.default_currency != company_default_currency
+			):
+				frappe.throw(
+					_(
+						"Billing currency must be equal to either default company's currency or party account currency"
+					)
+				)
+
+		# validate if account is mapped for same company
+		if account.account:
+			validate_account_head(account.idx, account.account, account.company)
+		if account.advance_account:
+			validate_account_head(account.idx, account.advance_account, account.company)
+
 
 @frappe.whitelist()
 def get_due_date(posting_date, party_type, party, company=None, bill_date=None):
@@ -724,7 +765,7 @@ def validate_account_party_type(self):
 
 	if self.party_type and self.party:
 		account_type = frappe.get_cached_value("Account", self.account, "account_type")
-		if account_type and (account_type not in ["Receivable", "Payable"]):
+		if account_type and (account_type not in ["Receivable", "Payable", "Equity"]):
 			frappe.throw(
 				_(
 					"Party Type and Party can only be set for Receivable / Payable account<br><br>" "{0}"

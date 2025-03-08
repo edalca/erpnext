@@ -13,6 +13,7 @@
   "company",
   "abbr",
   "supplier_name",
+  "tax_id",
   "country",
   "column_break0",
   "supplier_group",
@@ -35,11 +36,6 @@
   "website",
   "language",
   "dashboard_tab",
-  "tax_tab",
-  "tax_id",
-  "column_break_27",
-  "tax_category",
-  "tax_withholding_category",
   "contact_and_address_tab",
   "address_contacts",
   "address_html",
@@ -101,19 +97,9 @@
   {
    "fieldname": "tax_id",
    "fieldtype": "Data",
-   "label": "Tax ID"
-  },
-  {
-   "fieldname": "tax_category",
-   "fieldtype": "Link",
-   "label": "Tax Category",
-   "options": "Tax Category"
-  },
-  {
-   "fieldname": "tax_withholding_category",
-   "fieldtype": "Link",
-   "label": "Tax Withholding Category",
-   "options": "Tax Withholding Category"
+   "label": "RTN",
+   "length": 14,
+   "reqd": 1
   },
   {
    "default": "0",
@@ -401,11 +387,6 @@
    "label": "Defaults"
   },
   {
-   "fieldname": "tax_tab",
-   "fieldtype": "Tab Break",
-   "label": "Tax"
-  },
-  {
    "collapsible": 1,
    "fieldname": "internal_supplier_section",
    "fieldtype": "Section Break",
@@ -413,10 +394,6 @@
   },
   {
    "fieldname": "column_break_16",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_27",
    "fieldtype": "Column Break"
   },
   {
@@ -476,7 +453,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2025-03-07 01:49:19.652689",
+ "modified": "2025-03-08 14:58:40.668250",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Supplier",

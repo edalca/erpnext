@@ -2,7 +2,6 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "hash",
  "creation": "2013-03-28 10:35:29",
  "description": "An Item Group is a way to classify items based on types.",
  "doctype": "DocType",
@@ -143,11 +142,10 @@
  "is_tree": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2025-03-08 12:17:33.088295",
+ "modified": "2025-03-08 12:59:06.204110",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Item Group",
- "naming_rule": "Random",
  "nsm_parent_field": "parent_item_group",
  "owner": "Administrator",
  "permissions": [
@@ -210,7 +208,7 @@
    "share": 1
   }
  ],
- "search_fields": "parent_item_group",
+ "search_fields": "item_group_name",
  "show_name_in_global_search": 1,
  "show_title_field_in_link": 1,
  "sort_field": "modified",

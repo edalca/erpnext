@@ -175,6 +175,7 @@
   {
    "fieldname": "tax_id",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "RTN",
    "length": 14,
    "reqd": 1
@@ -541,7 +542,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2025-03-07 15:20:18.787377",
+ "modified": "2025-03-08 12:14:27.732371",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Customer",
@@ -619,7 +620,7 @@
   }
  ],
  "quick_entry": 1,
- "search_fields": "customer_group,territory, mobile_no,primary_address",
+ "search_fields": "tax_id",
  "show_name_in_global_search": 1,
  "show_title_field_in_link": 1,
  "sort_field": "modified",

@@ -257,13 +257,11 @@
   },
   {
    "collapsible": 1,
-   "collapsible_depends_on": "eval: doc.margin_type || doc.discount_amount",
    "fieldname": "discount_and_margin",
    "fieldtype": "Section Break",
    "label": "Discount and Margin"
   },
   {
-   "depends_on": "price_list_rate",
    "fieldname": "margin_type",
    "fieldtype": "Select",
    "label": "Margin Type",
@@ -271,14 +269,12 @@
    "print_hide": 1
   },
   {
-   "depends_on": "eval:doc.margin_type && doc.price_list_rate",
    "fieldname": "margin_rate_or_amount",
    "fieldtype": "Float",
    "label": "Margin Rate or Amount",
    "print_hide": 1
   },
   {
-   "depends_on": "eval:doc.margin_type && doc.price_list_rate && doc.margin_rate_or_amount",
    "fieldname": "rate_with_margin",
    "fieldtype": "Currency",
    "label": "Rate With Margin",
@@ -291,7 +287,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "price_list_rate",
    "fieldname": "discount_percentage",
    "fieldtype": "Percent",
    "label": "Discount (%) on Price List Rate with Margin",
@@ -300,14 +295,12 @@
    "print_hide": 1
   },
   {
-   "depends_on": "price_list_rate",
    "fieldname": "discount_amount",
    "fieldtype": "Currency",
    "label": "Discount Amount",
    "options": "currency"
   },
   {
-   "depends_on": "eval:doc.margin_type && doc.price_list_rate && doc.margin_rate_or_amount",
    "fieldname": "base_rate_with_margin",
    "fieldtype": "Currency",
    "label": "Rate With Margin (Company Currency)",
@@ -950,6 +943,7 @@
    "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "discount",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -960,7 +954,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-08 09:55:28.460734",
+ "modified": "2025-03-08 12:43:57.402652",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice Item",

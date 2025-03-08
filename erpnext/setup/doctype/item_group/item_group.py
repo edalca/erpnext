@@ -19,7 +19,6 @@ class ItemGroup(NestedSet):
 		from erpnext.stock.doctype.item_tax.item_tax import ItemTax
 		from frappe.types import DF
 
-		abbr: DF.Data | None
 		company: DF.Link
 		image: DF.AttachImage | None
 		is_group: DF.Check

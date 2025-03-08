@@ -11,7 +11,6 @@
  "field_order": [
   "gs",
   "company",
-  "abbr",
   "item_group_name",
   "parent_item_group",
   "is_group",
@@ -131,13 +130,6 @@
    "report_hide": 1
   },
   {
-   "fetch_from": "compay.abbr",
-   "fieldname": "abbr",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Abbr"
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -151,7 +143,7 @@
  "is_tree": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2025-03-08 11:00:27.615098",
+ "modified": "2025-03-08 12:17:33.088295",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Item Group",

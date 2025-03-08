@@ -7,12 +7,12 @@
  "engine": "InnoDB",
  "field_order": [
   "customer_section",
+  "company",
+  "company_tax_id",
   "title",
   "customer",
   "customer_name",
   "tax_id",
-  "company",
-  "company_tax_id",
   "column_break1",
   "posting_date",
   "posting_time",
@@ -247,7 +247,7 @@
    "fieldtype": "Data",
    "hide_days": 1,
    "hide_seconds": 1,
-   "label": "Tax Id",
+   "label": "Customer Tax ID",
    "print_hide": 1,
    "read_only": 1
   },
@@ -895,7 +895,6 @@
    "hide_seconds": 1
   },
   {
-   "fetch_from": "customer.loyalty_program",
    "fieldname": "loyalty_program",
    "fieldtype": "Link",
    "hide_days": 1,
@@ -1989,7 +1988,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-03-08 09:44:46.765794",
+ "modified": "2025-03-08 12:39:42.153860",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

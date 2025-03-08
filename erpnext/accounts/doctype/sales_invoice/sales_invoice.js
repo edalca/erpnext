@@ -328,7 +328,7 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 		this.get_terms();
 	}
 	customer() {
-		if (this.frm.doc.is_pos) {
+		/*if (this.frm.doc.is_pos) {
 			var pos_profile = this.frm.doc.pos_profile;
 		}
 		var me = this;
@@ -353,21 +353,8 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 			function () {
 				me.apply_pricing_rule();
 			}
-		);
+		);*/
 
-		if (this.frm.doc.customer) {
-			frappe.call({
-				method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.get_loyalty_programs",
-				args: {
-					customer: this.frm.doc.customer,
-				},
-				callback: function (r) {
-					if (r.message && r.message.length > 1) {
-						select_loyalty_program(me.frm, r.message);
-					}
-				},
-			});
-		}
 	}
 
 	make_inter_company_invoice() {
@@ -1032,14 +1019,32 @@ frappe.ui.form.on("Sales Invoice Item", {
 				}
 			},
 		});
+		calculate_amount(cdt,cdn)
 	},
+	qty(frm,cdt, cdn){
+		calculate_amount(cdt,cdn)
+	},
+	rate(frm,cdt, cdn){
+		calculate_amount(cdt,cdn)
+	}
+
 });
 
-var calculate_amount=function(cdt,cdn){
-	var row = locals[cdt][cdn];
-	var amount= row.qty*row.price
-	frappe.model.set_value(cdt,cdn,"amount",amount)
-}
+var calculate_amount = function(cdt, cdn) {
+    var row = locals[cdt][cdn];
+
+    // Asegúrate de que qty, rate y discount tengan valores válidos
+    var qty = row.qty || 0; // Por defecto 0 si no está definido
+    var rate = row.rate || 0; // Por defecto 0 si no está definido
+    var discount = row.discount || 0; // Por defecto 0 si no está definido
+
+    // Calcula el monto
+    var amount = (qty * rate) - ((qty * rate) * (discount / 100));
+
+    // Actualiza el valor del campo 'amount'
+    frappe.model.set_value(cdt, cdn, "amount", amount);
+};
+
 var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {
 	frappe.call({
 		method: "erpnext.projects.doctype.timesheet.timesheet.get_timesheet_detail_rate",
@@ -1055,7 +1060,7 @@ var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {
 	});
 };
 
-var select_loyalty_program = function (frm, loyalty_programs) {
+/*var select_loyalty_program = function (frm, loyalty_programs) {
 	var dialog = new frappe.ui.Dialog({
 		title: __("Select Loyalty Program"),
 		fields: [
@@ -1084,4 +1089,4 @@ var select_loyalty_program = function (frm, loyalty_programs) {
 	});
 
 	dialog.show();
-};
+};*/

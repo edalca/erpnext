@@ -3,14 +3,15 @@
  "allow_events_in_timeline": 1,
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "format:{supplier_name}-{abbr}",
  "creation": "2013-01-10 16:34:11",
  "description": "Supplier of Goods or Services.",
  "doctype": "DocType",
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
-  "naming_series",
+  "company",
+  "abbr",
   "supplier_name",
   "country",
   "column_break0",
@@ -54,8 +55,6 @@
   "email_id",
   "accounting_tab",
   "payment_terms",
-  "default_accounts_section",
-  "accounts",
   "settings_tab",
   "allow_purchase_invoice_creation_without_purchase_order",
   "allow_purchase_invoice_creation_without_purchase_receipt",
@@ -76,16 +75,6 @@
   "column_break_1mqv"
  ],
  "fields": [
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "no_copy": 1,
-   "oldfieldname": "naming_series",
-   "oldfieldtype": "Select",
-   "options": "SUP-.YYYY.-",
-   "set_only_once": 1
-  },
   {
    "bold": 1,
    "fieldname": "supplier_name",
@@ -300,13 +289,6 @@
    "read_only": 1
   },
   {
-   "description": "Mention if non-standard payable account",
-   "fieldname": "accounts",
-   "fieldtype": "Table",
-   "label": "Accounts",
-   "options": "Party Account"
-  },
-  {
    "collapsible": 1,
    "collapsible_depends_on": "supplier_details",
    "fieldname": "column_break2",
@@ -451,11 +433,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "default_accounts_section",
-   "fieldtype": "Section Break",
-   "label": "Default Accounts"
-  },
-  {
    "fieldname": "portal_users_tab",
    "fieldtype": "Tab Break",
    "label": "Portal Users"
@@ -473,6 +450,20 @@
   {
    "fieldname": "column_break_mglr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr"
   }
  ],
  "icon": "fa fa-user",
@@ -485,11 +476,11 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2024-05-08 18:02:57.342931",
+ "modified": "2025-03-07 01:49:19.652689",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Supplier",
- "naming_rule": "By \"Naming Series\" field",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -546,6 +537,7 @@
  "quick_entry": 1,
  "search_fields": "supplier_group",
  "show_name_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],

@@ -6,7 +6,7 @@ import copy
 import frappe
 from frappe import _
 from frappe.utils.nestedset import NestedSet
-
+from frappe.model.naming import  set_name_from_naming_options
 
 class ItemGroup(NestedSet):
 	# begin: auto-generated types
@@ -20,7 +20,7 @@ class ItemGroup(NestedSet):
 		from frappe.types import DF
 
 		abbr: DF.Data | None
-		compay: DF.Link
+		company: DF.Link
 		image: DF.AttachImage | None
 		is_group: DF.Check
 		item_group_defaults: DF.Table[ItemDefault]
@@ -31,6 +31,12 @@ class ItemGroup(NestedSet):
 		rgt: DF.Int
 		taxes: DF.Table[ItemTax]
 	# end: auto-generated types
+
+	def autoname(self):
+		company_abbr = frappe.get_value("Company", self.company, "abbr")
+		if not company_abbr:
+			frappe.throw(f"Company abbreviation not found for {self.company}")
+		set_name_from_naming_options("IG-"+company_abbr+"-.####",self)
 
 	def validate(self):
 		if not self.parent_item_group and not frappe.flags.in_test:

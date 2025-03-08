@@ -1,10 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:SD-{abbr}-{####}",
  "creation": "2025-03-07 01:00:30.755288",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "company",
+  "abbr",
   "user",
   "discount"
  ],
@@ -21,14 +24,29 @@
    "fieldname": "discount",
    "fieldtype": "Percent",
    "label": "Discount"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-07 01:01:11.460889",
+ "modified": "2025-03-08 10:18:14.355515",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Discount",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -46,5 +64,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "user"
 }

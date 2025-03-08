@@ -13,6 +13,7 @@
   "col_break1",
   "item_name",
   "customer_item_code",
+  "discount",
   "description_section",
   "description",
   "item_group",
@@ -443,6 +444,7 @@
    "collapsible": 1,
    "fieldname": "accounting",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Accounting Details"
   },
   {
@@ -798,6 +800,7 @@
    "collapsible": 1,
    "fieldname": "accounting_dimensions_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Accounting Dimensions"
   },
   {
@@ -945,12 +948,19 @@
    "no_copy": 1,
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Discount",
+   "print_hide": 1
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-25 16:27:33.287341",
+ "modified": "2025-03-08 09:55:28.460734",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice Item",

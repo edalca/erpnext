@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "format:{abbr}-IG-{####}",
+ "autoname": "hash",
  "creation": "2013-03-28 10:35:29",
  "description": "An Item Group is a way to classify items based on types.",
  "doctype": "DocType",
@@ -10,7 +10,7 @@
  "engine": "InnoDB",
  "field_order": [
   "gs",
-  "compay",
+  "company",
   "abbr",
   "item_group_name",
   "parent_item_group",
@@ -131,18 +131,18 @@
    "report_hide": 1
   },
   {
-   "fieldname": "compay",
-   "fieldtype": "Link",
-   "label": "Company",
-   "options": "Company",
-   "reqd": 1
-  },
-  {
    "fetch_from": "compay.abbr",
    "fieldname": "abbr",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Abbr"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-sitemap",
@@ -151,11 +151,11 @@
  "is_tree": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2025-03-06 16:35:36.718185",
+ "modified": "2025-03-08 11:00:27.615098",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Item Group",
- "naming_rule": "Expression",
+ "naming_rule": "Random",
  "nsm_parent_field": "parent_item_group",
  "owner": "Administrator",
  "permissions": [

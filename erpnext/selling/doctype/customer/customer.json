@@ -2,7 +2,8 @@
  "actions": [],
  "allow_events_in_timeline": 1,
  "allow_import": 1,
- "autoname": "format:CI-{####}",
+ "allow_rename": 1,
+ "autoname": "format:",
  "creation": "2013-06-11 14:26:44",
  "description": "Buyer of Goods and Services.",
  "doctype": "DocType",
@@ -176,8 +177,7 @@
    "fieldtype": "Data",
    "label": "RTN",
    "length": 14,
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "default": "0",
@@ -541,7 +541,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2025-03-06 23:32:28.804345",
+ "modified": "2025-03-07 15:20:18.787377",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Customer",

@@ -37,6 +37,7 @@ class SalesInvoiceItem(Document):
 		delivered_qty: DF.Float
 		delivery_note: DF.Link | None
 		description: DF.TextEditor | None
+		discount: DF.Percent
 		discount_account: DF.Link | None
 		discount_amount: DF.Currency
 		discount_percentage: DF.Percent

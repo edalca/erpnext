@@ -14,6 +14,8 @@ class SalesDiscount(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		abbr: DF.Data | None
+		company: DF.Link
 		discount: DF.Percent
 		user: DF.Link
 	# end: auto-generated types

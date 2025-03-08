@@ -7,30 +7,6 @@ frappe.ui.form.on("Supplier", {
 		if (frm.doc.__islocal == 1) {
 			frm.set_value("represents_company", "");
 		}
-		frm.set_query("account", "accounts", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
-			return {
-				filters: {
-					account_type: "Payable",
-					root_type: "Liability",
-					company: d.company,
-					is_group: 0,
-				},
-			};
-		});
-
-		frm.set_query("advance_account", "accounts", function (doc, cdt, cdn) {
-			let d = locals[cdt][cdn];
-			return {
-				filters: {
-					account_type: "Payable",
-					root_type: "Asset",
-					company: d.company,
-					is_group: 0,
-				},
-			};
-		});
-
 		frm.set_query("default_bank_account", function () {
 			return {
 				filters: {

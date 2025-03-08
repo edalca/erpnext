@@ -434,11 +434,6 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 		]);
 	}
 
-	set_dynamic_labels() {
-		super.set_dynamic_labels();
-		this.frm.events.hide_fields(this.frm);
-	}
-
 	items_on_form_rendered() {
 		erpnext.setup_serial_or_batch_no();
 	}
@@ -505,7 +500,6 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 							}
 
 							frappe.model.set_default_values(me.frm.doc);
-							me.set_dynamic_labels();
 							me.calculate_taxes_and_totals();
 						}
 					},
@@ -815,32 +809,6 @@ frappe.ui.form.on("Sales Invoice", {
 		}
 	},
 
-	hide_fields: function (frm) {
-		let doc = frm.doc;
-		var parent_fields = [
-			"project",
-			"due_date",
-			"is_opening",
-			"source",
-			"total_advance",
-			"get_advances",
-			"advances",
-			"from_date",
-			"to_date",
-		];
-
-		if (cint(doc.is_pos) == 1) {
-			hide_field(parent_fields);
-		} else {
-			for (var i in parent_fields) {
-				var docfield = frappe.meta.docfield_map[doc.doctype][parent_fields[i]];
-				if (!docfield.hidden) unhide_field(parent_fields[i]);
-			}
-		}
-
-		frm.refresh_fields();
-	},
-
 	get_loyalty_details: function (frm) {
 		if (frm.doc.customer && frm.doc.redeem_loyalty_points) {
 			frappe.call({
@@ -1044,6 +1012,34 @@ frappe.ui.form.on("Sales Invoice Timesheet", {
 	},
 });
 
+frappe.ui.form.on("Sales Invoice Item", {
+	discount(frm, cdt, cdn) {
+		frappe.call({
+			method: "frappe.client.get_value", // Método del lado del servidor
+			args: {
+				doctype: "Sales Discount", // DocType del cual quieres obtener datos
+				filters: { user: frappe.session.user }, // Filtro, por ejemplo 'name' del Company
+				fieldname: "discount", // El campo que quieres obtener
+			},
+			callback: function (response) {
+				var row = locals[cdt][cdn];
+				if (response.message) {
+					let discount = response.message.discount; // Aquí tienes el valor del campo
+					if (row.discount>discount){
+						frappe.model.set_value(cdt, cdn, "discount", discount);
+					}
+
+				}
+			},
+		});
+	},
+});
+
+var calculate_amount=function(cdt,cdn){
+	var row = locals[cdt][cdn];
+	var amount= row.qty*row.price
+	frappe.model.set_value(cdt,cdn,"amount",amount)
+}
 var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {
 	frappe.call({
 		method: "erpnext.projects.doctype.timesheet.timesheet.get_timesheet_detail_rate",

@@ -111,7 +111,7 @@ class Item(Document):
 		is_sales_item: DF.Check
 		is_stock_item: DF.Check
 		is_sub_contracted_item: DF.Check
-		item_code: DF.Data
+		item_code: DF.Data | None
 		item_defaults: DF.Table[ItemDefault]
 		item_group: DF.Link
 		item_name: DF.Data

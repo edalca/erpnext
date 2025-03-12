@@ -2,6 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
+ "autoname": "format:{item_group_name}-[abbr}",
  "creation": "2013-03-28 10:35:29",
  "description": "An Item Group is a way to classify items based on types.",
  "doctype": "DocType",
@@ -10,6 +11,7 @@
  "field_order": [
   "gs",
   "company",
+  "abbr",
   "item_group_name",
   "parent_item_group",
   "is_group",
@@ -134,6 +136,13 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr"
   }
  ],
  "icon": "fa fa-sitemap",
@@ -142,10 +151,11 @@
  "is_tree": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2025-03-08 12:59:06.204110",
+ "modified": "2025-03-09 23:16:03.896481",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Item Group",
+ "naming_rule": "Expression",
  "nsm_parent_field": "parent_item_group",
  "owner": "Administrator",
  "permissions": [

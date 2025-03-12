@@ -322,7 +322,7 @@ erpnext.PointOfSale.Controller = class {
 					this.item_selector.load_items_data();
 					this.customer_details = details;
 					// will add/remove LP payment method
-					this.payment.render_loyalty_points_payment_mode();
+					//this.payment.render_loyalty_points_payment_mode();
 				},
 			},
 		});

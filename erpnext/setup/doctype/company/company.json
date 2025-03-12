@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:company_name",
+ "autoname": "field:tax_id",
  "creation": "2022-01-25 10:29:55.938239",
  "description": "Legal Entity / Subsidiary with a separate Chart of Accounts belonging to the Organization.",
  "doctype": "DocType",
@@ -11,13 +11,14 @@
  "field_order": [
   "details",
   "company_name",
+  "tax_id",
   "abbr",
-  "default_currency",
-  "country",
+  "commercial_name",
   "default_holiday_list",
   "cb0",
+  "country",
+  "default_currency",
   "default_letter_head",
-  "tax_id",
   "domain",
   "date_of_establishment",
   "company_info",
@@ -126,7 +127,7 @@
   {
    "fieldname": "company_name",
    "fieldtype": "Data",
-   "label": "Company",
+   "label": "Registered Name",
    "oldfieldname": "company_name",
    "oldfieldtype": "Data",
    "reqd": 1,
@@ -271,7 +272,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "RTN",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "date_of_establishment",
@@ -857,14 +859,19 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "commercial_name",
+   "fieldtype": "Data",
+   "label": "Commercial Name",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-building",
  "idx": 1,
  "image_field": "company_logo",
- "is_submittable": 1,
  "links": [],
- "modified": "2025-03-07 01:13:35.653789",
+ "modified": "2025-03-09 00:54:46.024855",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",
@@ -927,9 +934,10 @@
   }
  ],
  "show_name_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],
- "title_field": "company_name",
+ "title_field": "commercial_name",
  "track_changes": 1
 }

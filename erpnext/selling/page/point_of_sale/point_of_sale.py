@@ -120,7 +120,6 @@ def get_items(start, page_length, price_list, item_group, pos_profile, search_te
 	warehouse, hide_unavailable_items = frappe.db.get_value(
 		"POS Profile", pos_profile, ["warehouse", "hide_unavailable_items"]
 	)
-
 	result = []
 
 	if search_term:

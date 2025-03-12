@@ -80,7 +80,8 @@ erpnext.PointOfSale.PastOrderSummary = class {
 
 		return `<div class="left-section">
 					<div class="customer-name">${doc.customer}</div>
-					<div class="customer-email">${this.customer_email}</div>
+					<div class="customer-email">${doc.customer_name}</div>
+					<div class="customer-email">${this.tax_id}</div>
 					<div class="cashier">${__("Sold by")}: ${doc.owner}</div>
 				</div>
 				<div class="right-section">
@@ -361,8 +362,8 @@ erpnext.PointOfSale.PastOrderSummary = class {
 	}
 
 	attach_document_info(doc) {
-		frappe.db.get_value("Customer", this.doc.customer, "email_id").then(({ message }) => {
-			this.customer_email = message.email_id || "";
+		frappe.db.get_value("Customer", this.doc.customer, "tax_id").then(({ message }) => {
+			this.tax_id = message.tax_id || "";
 			const upper_section_dom = this.get_upper_section_html(doc);
 			this.$upper_section.html(upper_section_dom);
 		});

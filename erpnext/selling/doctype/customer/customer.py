@@ -63,6 +63,8 @@ class Customer(TransactionBase):
 		is_internal_customer: DF.Check
 		language: DF.Link | None
 		lead_name: DF.Link | None
+		loyalty_program: DF.Link | None
+		loyalty_program_tier: DF.Data | None
 		market_segment: DF.Link | None
 		mobile_no: DF.ReadOnly | None
 		opportunity_name: DF.Link | None

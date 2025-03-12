@@ -33,7 +33,7 @@ from erpnext.controllers.item_variant import (
 	validate_item_variant_attributes,
 )
 from erpnext.stock.doctype.item_default.item_default import ItemDefault
-
+from frappe.model.naming import  set_name_from_naming_options
 
 class DuplicateReorderRows(frappe.ValidationError):
 	pass
@@ -153,19 +153,7 @@ class Item(Document):
 		self.set_onload("asset_naming_series", get_asset_naming_series())
 
 	def autoname(self):
-		if frappe.db.get_default("item_naming_by") == "Naming Series":
-			if self.variant_of:
-				if not self.item_code:
-					template_item_name = frappe.db.get_value("Item", self.variant_of, "item_name")
-					make_variant_item_code(self.variant_of, template_item_name, self)
-			else:
-				from frappe.model.naming import set_name_by_naming_series
-
-				set_name_by_naming_series(self)
-				self.item_code = self.name
-
-		self.item_code = strip(self.item_code)
-		self.name = self.item_code
+		set_name_from_naming_options(self.abbr+"-I-"+".#####",self)
 
 	def after_insert(self):
 		"""set opening stock and item price"""

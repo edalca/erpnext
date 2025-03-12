@@ -16,7 +16,7 @@ from erpnext.setup.doctype.incoterm.incoterm import create_incoterms
 from .default_success_action import get_default_success_action
 
 default_mail_footer = """<div style="padding: 7px; text-align: right; color: #888"><small>Sent via
-	<a style="color: #888" href="http://erpnext.org">ERPNext</a></div>"""
+	<a style="color: #888" href="http://erpnext.org">Sodexhn</a></div>"""
 
 
 def after_install():
@@ -56,7 +56,7 @@ def check_frappe_version():
 		return
 
 	click.secho(
-		f"You're attempting to install ERPNext version {erpnext_version} with Frappe version {frappe_version}. "
+		f"You're attempting to install Sodexhn version {erpnext_version} with Frappe version {frappe_version}. "
 		"This is not supported and will result in broken install. Switch to correct branch before installing.",
 		fg="red",
 	)

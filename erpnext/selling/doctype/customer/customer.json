@@ -77,7 +77,10 @@
   "is_frozen",
   "disabled",
   "portal_users_tab",
-  "portal_users"
+  "portal_users",
+  "loyalty_tab",
+  "loyalty_program",
+  "loyalty_program_tier"
  ],
  "fields": [
   {
@@ -529,6 +532,22 @@
    "fieldtype": "Link",
    "label": "Advance Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "loyalty_tab",
+   "fieldtype": "Tab Break",
+   "label": "Loyalty Program"
+  },
+  {
+   "fieldname": "loyalty_program",
+   "fieldtype": "Link",
+   "label": "Loyalty Program",
+   "options": "Loyalty Program"
+  },
+  {
+   "fieldname": "loyalty_program_tier",
+   "fieldtype": "Data",
+   "label": "Loyalty Program Tier"
   }
  ],
  "icon": "fa fa-user",
@@ -542,7 +561,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2025-03-08 12:14:27.732371",
+ "modified": "2025-03-10 00:43:42.437324",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Customer",

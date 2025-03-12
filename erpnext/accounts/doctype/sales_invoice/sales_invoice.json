@@ -1,23 +1,24 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "format:{YY}-{#####}",
+ "autoname": "format:SI-{abbr}-{YY}-{#####}",
  "creation": "2022-01-25 10:29:57.771398",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "customer_section",
   "company",
+  "abbr",
   "company_tax_id",
   "title",
   "customer",
   "customer_name",
   "tax_id",
+  "payment_method",
   "column_break1",
   "posting_date",
   "posting_time",
   "set_posting_time",
-  "due_date",
   "column_break_14",
   "is_pos",
   "pos_profile",
@@ -338,16 +339,6 @@
    "hide_seconds": 1,
    "label": "Edit Posting Date and Time",
    "print_hide": 1
-  },
-  {
-   "fieldname": "due_date",
-   "fieldtype": "Date",
-   "hide_days": 1,
-   "hide_seconds": 1,
-   "label": "Payment Due Date",
-   "no_copy": 1,
-   "oldfieldname": "due_date",
-   "oldfieldtype": "Date"
   },
   {
    "fieldname": "amended_from",
@@ -1976,6 +1967,20 @@
    "label": "Update Outstanding for Self",
    "no_copy": 1,
    "print_hide": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr"
+  },
+  {
+   "default": "Cash Payment",
+   "fieldname": "payment_method",
+   "fieldtype": "Select",
+   "label": "Payment Method",
+   "options": "Cash Payment\nCredit Payment"
   }
  ],
  "icon": "fa fa-file-text",
@@ -1988,7 +1993,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-03-08 12:39:42.153860",
+ "modified": "2025-03-09 21:48:24.499911",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",
@@ -2034,7 +2039,7 @@
   }
  ],
  "quick_entry": 1,
- "search_fields": "posting_date, due_date, customer, base_grand_total, outstanding_amount",
+ "search_fields": "posting_date, customer, base_grand_total, outstanding_amount",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

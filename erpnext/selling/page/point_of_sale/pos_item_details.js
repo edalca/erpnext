@@ -164,7 +164,7 @@ erpnext.PointOfSale.ItemDetails = class {
 	render_form(item) {
 		const fields_to_display = this.get_form_fields(item);
 		this.$form_container.html("");
-
+		const super_this =this;
 		fields_to_display.forEach((fieldname, idx) => {
 			this.$form_container.append(
 				`<div class="${fieldname}-control" data-fieldname="${fieldname}"></div>`
@@ -178,6 +178,7 @@ erpnext.PointOfSale.ItemDetails = class {
 				df: {
 					...field_meta,
 					onchange: function () {
+						fieldname ==="discount_percentage" && super_this.discount_validate(this)
 						me.events.form_updated(me.current_item, fieldname, this.value);
 					},
 				},
@@ -190,6 +191,12 @@ erpnext.PointOfSale.ItemDetails = class {
 		this.make_auto_serial_selection_btn(item);
 
 		this.bind_custom_control_change_event();
+	}
+
+	discount_validate(me){
+		if (me.value>=100){
+			me.value=10
+		}
 	}
 
 	get_form_fields(item) {

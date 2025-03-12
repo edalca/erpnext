@@ -36,6 +36,7 @@ class Company(Document):
 		book_advance_payments_in_separate_party_account: DF.Check
 		capital_work_in_progress_account: DF.Link | None
 		chart_of_accounts: DF.Literal[None]
+		commercial_name: DF.Data
 		company_description: DF.TextEditor | None
 		company_logo: DF.AttachImage | None
 		company_name: DF.Data

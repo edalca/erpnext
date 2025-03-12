@@ -6,98 +6,103 @@ import copy
 import frappe
 from frappe import _
 from frappe.utils.nestedset import NestedSet
-from frappe.model.naming import  set_name_from_naming_options
+from frappe.model.naming import set_name_from_naming_options
 
 class ItemGroup(NestedSet):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
 
-	from typing import TYPE_CHECKING
+    from typing import TYPE_CHECKING
 
-	if TYPE_CHECKING:
-		from erpnext.stock.doctype.item_default.item_default import ItemDefault
-		from erpnext.stock.doctype.item_tax.item_tax import ItemTax
-		from frappe.types import DF
+    if TYPE_CHECKING:
+        from erpnext.stock.doctype.item_default.item_default import ItemDefault
+        from erpnext.stock.doctype.item_tax.item_tax import ItemTax
+        from frappe.types import DF
 
-		company: DF.Link
-		image: DF.AttachImage | None
-		is_group: DF.Check
-		item_group_defaults: DF.Table[ItemDefault]
-		item_group_name: DF.Data
-		lft: DF.Int
-		old_parent: DF.Link | None
-		parent_item_group: DF.Link | None
-		rgt: DF.Int
-		taxes: DF.Table[ItemTax]
-	# end: auto-generated types
+        abbr: DF.Data | None
+        company: DF.Link
+        image: DF.AttachImage | None
+        is_group: DF.Check
+        item_group_defaults: DF.Table[ItemDefault]
+        item_group_name: DF.Data
+        lft: DF.Int
+        old_parent: DF.Link | None
+        parent_item_group: DF.Link | None
+        rgt: DF.Int
+        taxes: DF.Table[ItemTax]
+    # end: auto-generated types
 
-	def autoname(self):
-		company_abbr = frappe.get_value("Company", self.company, "abbr")
-		if not company_abbr:
-			frappe.throw(f"Company abbreviation not found for {self.company}")
-		set_name_from_naming_options("IG-"+company_abbr+"-.####",self)
+    def autoname(self):
+        self.name = self.item_group_name + "-" + self.abbr
 
-	def validate(self):
-		if not self.parent_item_group and not frappe.flags.in_test:
-			if frappe.db.exists("Item Group", _("All Item Groups")):
-				self.parent_item_group = _("All Item Groups")
-		self.validate_item_group_defaults()
-		self.check_item_tax()
+    def on_update(self):
+        # Actualizar el name si item_group_name o abbr cambiaron
+        new_name = self.item_group_name + "-" + self.abbr
+        if self.name != new_name:
+            frappe.rename_doc(self.doctype, self.name, new_name, force=True)
+            self.name = new_name  # Actualizar el name en el documento actual
 
-	def check_item_tax(self):
-		"""Check whether Tax Rate is not entered twice for same Tax Type"""
-		check_list = []
-		for d in self.get("taxes"):
-			if d.item_tax_template:
-				if (d.item_tax_template, d.tax_category) in check_list:
-					frappe.throw(
-						_("{0} entered twice {1} in Item Taxes").format(
-							frappe.bold(d.item_tax_template),
-							f"for tax category {frappe.bold(d.tax_category)}" if d.tax_category else "",
-						)
-					)
-				else:
-					check_list.append((d.item_tax_template, d.tax_category))
+        # Ejecutar las operaciones de NestedSet y otras validaciones
+        NestedSet.on_update(self)
+        self.validate_one_root()
+        self.delete_child_item_groups_key()
 
-	def on_update(self):
-		NestedSet.on_update(self)
-		self.validate_one_root()
-		self.delete_child_item_groups_key()
+    def validate(self):
+        if not self.parent_item_group and not frappe.flags.in_test:
+            if frappe.db.exists("Item Group", _("All Item Groups")):
+                self.parent_item_group = _("All Item Groups")
+        self.validate_item_group_defaults()
+        self.check_item_tax()
 
-	def on_trash(self):
-		NestedSet.on_trash(self, allow_root_deletion=True)
-		self.delete_child_item_groups_key()
+    def check_item_tax(self):
+        """Check whether Tax Rate is not entered twice for same Tax Type"""
+        check_list = []
+        for d in self.get("taxes"):
+            if d.item_tax_template:
+                if (d.item_tax_template, d.tax_category) in check_list:
+                    frappe.throw(
+                        _("{0} entered twice {1} in Item Taxes").format(
+                            frappe.bold(d.item_tax_template),
+                            f"for tax category {frappe.bold(d.tax_category)}" if d.tax_category else "",
+                        )
+                    )
+                else:
+                    check_list.append((d.item_tax_template, d.tax_category))
 
-	def delete_child_item_groups_key(self):
-		frappe.cache().hdel("child_item_groups", self.name)
+    def on_trash(self):
+        NestedSet.on_trash(self, allow_root_deletion=True)
+        self.delete_child_item_groups_key()
 
-	def validate_item_group_defaults(self):
-		from erpnext.stock.doctype.item.item import validate_item_default_company_links
+    def delete_child_item_groups_key(self):
+        frappe.cache().hdel("child_item_groups", self.name)
 
-		validate_item_default_company_links(self.item_group_defaults)
+    def validate_item_group_defaults(self):
+        from erpnext.stock.doctype.item.item import validate_item_default_company_links
+
+        validate_item_default_company_links(self.item_group_defaults)
 
 
 def get_child_item_groups(item_group_name):
-	item_group = frappe.get_cached_value("Item Group", item_group_name, ["lft", "rgt"], as_dict=1)
+    item_group = frappe.get_cached_value("Item Group", item_group_name, ["lft", "rgt"], as_dict=1)
 
-	child_item_groups = [
-		d.name
-		for d in frappe.get_all(
-			"Item Group", filters={"lft": (">=", item_group.lft), "rgt": ("<=", item_group.rgt)}
-		)
-	]
+    child_item_groups = [
+        d.name
+        for d in frappe.get_all(
+            "Item Group", filters={"lft": (">=", item_group.lft), "rgt": ("<=", item_group.rgt)}
+        )
+    ]
 
-	return child_item_groups or {}
+    return child_item_groups or {}
 
 
 def get_item_group_defaults(item, company):
-	item = frappe.get_cached_doc("Item", item)
-	item_group = frappe.get_cached_doc("Item Group", item.item_group)
+    item = frappe.get_cached_doc("Item", item)
+    item_group = frappe.get_cached_doc("Item Group", item.item_group)
 
-	for d in item_group.item_group_defaults or []:
-		if d.company == company:
-			row = copy.deepcopy(d.as_dict())
-			row.pop("name")
-			return row
+    for d in item_group.item_group_defaults or []:
+        if d.company == company:
+            row = copy.deepcopy(d.as_dict())
+            row.pop("name")
+            return row
 
-	return frappe._dict()
+    return frappe._dict()

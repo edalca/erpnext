@@ -65,6 +65,7 @@ class SalesInvoice(SellingController):
 		from erpnext.stock.doctype.packed_item.packed_item import PackedItem
 		from frappe.types import DF
 
+		abbr: DF.Data | None
 		account_for_change_amount: DF.Link | None
 		additional_discount_account: DF.Link | None
 		additional_discount_percentage: DF.Float
@@ -105,7 +106,6 @@ class SalesInvoice(SellingController):
 		debit_to: DF.Link
 		disable_rounded_total: DF.Check
 		discount_amount: DF.Currency
-		due_date: DF.Date | None
 		from_date: DF.Date | None
 		grand_total: DF.Currency
 		group_same_items: DF.Check
@@ -138,6 +138,7 @@ class SalesInvoice(SellingController):
 		packed_items: DF.Table[PackedItem]
 		paid_amount: DF.Currency
 		party_account_currency: DF.Link | None
+		payment_method: DF.Literal["Cash Payment", "Credit Payment"]
 		payment_schedule: DF.Table[PaymentSchedule]
 		payment_terms_template: DF.Link | None
 		payments: DF.Table[SalesInvoicePayment]

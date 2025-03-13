@@ -354,7 +354,6 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 				me.apply_pricing_rule();
 			}
 		);*/
-
 	}
 
 	make_inter_company_invoice() {
@@ -937,7 +936,16 @@ frappe.ui.form.on("Sales Invoice", {
 			frm.doc.timesheets.reduce((a, b) => a + (b["billing_hours"] || 0.0), 0.0)
 		);
 	},
-
+	payment_method: function (frm) {
+		if (frm.doc.payment_method === "Cash Payment") {
+			frm.set_value("due_date", new Date());
+		} else {
+			// Añade 15 días a la fecha actual
+			let currentDate = new Date();
+			let dueDate = new Date(currentDate.setDate(currentDate.getDate() + 15));
+			frm.set_value("due_date", dueDate);
+		}
+	},
 	refresh: function (frm) {
 		if (frm.doc.docstatus === 0 && !frm.doc.is_return) {
 			frm.add_custom_button(
@@ -986,7 +994,9 @@ frappe.ui.form.on("Sales Invoice", {
 				__("Get Items From")
 			);
 		}
-
+		if (frm.doc.payment_method === "Cash Payment") {
+			frm.set_value("due_date", new Date());
+		}
 		if (frm.doc.is_debit_note) {
 			frm.set_df_property("return_against", "label", __("Adjustment Against"));
 		}
@@ -1000,7 +1010,7 @@ frappe.ui.form.on("Sales Invoice Timesheet", {
 });
 
 frappe.ui.form.on("Sales Invoice Item", {
-	discount(frm, cdt, cdn) {
+	discount_percentage(frm, cdt, cdn) {
 		frappe.call({
 			method: "frappe.client.get_value", // Método del lado del servidor
 			args: {
@@ -1012,37 +1022,36 @@ frappe.ui.form.on("Sales Invoice Item", {
 				var row = locals[cdt][cdn];
 				if (response.message) {
 					let discount = response.message.discount; // Aquí tienes el valor del campo
-					if (row.discount>discount){
-						frappe.model.set_value(cdt, cdn, "discount", discount);
+					if (row.discount_percentage > discount) {
+						frappe.model.set_value(cdt, cdn, "discount_percentage", discount);
 					}
-
+					if (!discount) frappe.model.set_value(cdt, cdn, "discount_percentage", 0);
 				}
 			},
 		});
-		calculate_amount(cdt,cdn)
+		calculate_amount(cdt, cdn);
 	},
-	qty(frm,cdt, cdn){
-		calculate_amount(cdt,cdn)
+	qty(frm, cdt, cdn) {
+		calculate_amount(cdt, cdn);
 	},
-	rate(frm,cdt, cdn){
-		calculate_amount(cdt,cdn)
-	}
-
+	rate(frm, cdt, cdn) {
+		calculate_amount(cdt, cdn);
+	},
 });
 
-var calculate_amount = function(cdt, cdn) {
-    var row = locals[cdt][cdn];
+var calculate_amount = function (cdt, cdn) {
+	var row = locals[cdt][cdn];
 
-    // Asegúrate de que qty, rate y discount tengan valores válidos
-    var qty = row.qty || 0; // Por defecto 0 si no está definido
-    var rate = row.rate || 0; // Por defecto 0 si no está definido
-    var discount = row.discount || 0; // Por defecto 0 si no está definido
+	// Asegúrate de que qty, rate y discount tengan valores válidos
+	var qty = row.qty || 0; // Por defecto 0 si no está definido
+	var rate = row.rate || 0; // Por defecto 0 si no está definido
+	var discount = row.discount || 0; // Por defecto 0 si no está definido
 
-    // Calcula el monto
-    var amount = (qty * rate) - ((qty * rate) * (discount / 100));
+	// Calcula el monto
+	var amount = qty * rate - qty * rate * (discount / 100);
 
-    // Actualiza el valor del campo 'amount'
-    frappe.model.set_value(cdt, cdn, "amount", amount);
+	// Actualiza el valor del campo 'amount'
+	frappe.model.set_value(cdt, cdn, "amount", amount);
 };
 
 var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {

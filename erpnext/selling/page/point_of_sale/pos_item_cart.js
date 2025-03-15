@@ -26,6 +26,7 @@ erpnext.PointOfSale.ItemCart = class {
 	init_child_components() {
 		this.init_customer_selector();
 		this.init_cart_components();
+
 	}
 
 	init_customer_selector() {
@@ -40,7 +41,6 @@ erpnext.PointOfSale.ItemCart = class {
 		this.make_customer_selector();
 		this.customer_field.set_focus();
 	}
-
 	init_cart_components() {
 		this.$component.append(
 			`<div class="cart-container">
@@ -87,9 +87,9 @@ erpnext.PointOfSale.ItemCart = class {
 
 	make_cart_totals_section() {
 		this.$totals_section = this.$component.find(".cart-totals-section");
-		//	${this.get_discount_icon()} ${__("Add Discount")}
+		//${this.get_discount_icon()} ${__("Add Discount")}
 		this.$totals_section.append(
-			`<div class="add-discount-wrapper">
+			`<div class="add-discount-wrapper-none" >
 
 			</div>
 			<div class="item-qty-total-container">
@@ -197,12 +197,11 @@ erpnext.PointOfSale.ItemCart = class {
 			this.toggle_checkout_btn(true);
 		});
 
-		/*this.$component.on("click", ".add-discount-wrapper", () => {
+		this.$component.on("click", ".add-discount-wrapper", () => {
 			const can_edit_discount = this.$add_discount_elem.find(".edit-discount-btn").length;
-
 			if (!this.discount_field || can_edit_discount) this.show_discount_control();
 		});
-*/
+
 		frappe.ui.form.on("POS Invoice", "paid_amount", (frm) => {
 			// called when discount is applied
 			this.update_totals_section(frm);
@@ -340,7 +339,14 @@ erpnext.PointOfSale.ItemCart = class {
 		if (customer) {
 			return new Promise((resolve) => {
 				frappe.db
-					.get_value("Customer", customer, ["email_id","tax_id","customer_name", "mobile_no", "image", "loyalty_program"])
+					.get_value("Customer", customer, [
+						"email_id",
+						"tax_id",
+						"customer_name",
+						"mobile_no",
+						"image",
+						"loyalty_program",
+					])
 					.then(({ message }) => {
 						const { loyalty_program } = message;
 						// if loyalty program then fetch loyalty points too
@@ -420,7 +426,7 @@ erpnext.PointOfSale.ItemCart = class {
 				border: "1px dashed var(--gray-500)",
 				padding: "var(--padding-sm) var(--padding-md)",
 			});
-			//this.$add_discount_elem.html(`${this.get_discount_icon()} ${__("Add Discount")}`);
+			this.$add_discount_elem.html(`${this.get_discount_icon()} ${__("Add Discount")}`);
 			this.discount_field = undefined;
 		} else {
 			this.$add_discount_elem.css({
@@ -437,7 +443,14 @@ erpnext.PointOfSale.ItemCart = class {
 
 	update_customer_section() {
 		const me = this;
-		const { customer,tax_id,customer_name, email_id = "", mobile_no = "", image } = this.customer_info || {};
+		const {
+			customer,
+			tax_id,
+			customer_name,
+			email_id = "",
+			mobile_no = "",
+			image,
+		} = this.customer_info || {};
 		if (customer) {
 			this.$customer_section.html(
 				`<div class="customer-details">
@@ -846,8 +859,8 @@ erpnext.PointOfSale.ItemCart = class {
 
 	toggle_customer_info(show) {
 		if (show) {
-			const { customer,tax_id, customer_name } = this.customer_info || {};
-			console.log(customer)
+			const { customer, tax_id, customer_name } = this.customer_info || {};
+			console.log(customer);
 			this.$cart_container.css("display", "none");
 			this.$customer_section.css({
 				height: "100%",

@@ -938,14 +938,17 @@ frappe.ui.form.on("Sales Invoice", {
 	},
 	payment_method: function (frm) {
 		if (frm.doc.payment_method === "Cash Payment") {
-			frm.set_value("due_date", new Date());
+			// Fecha actual formateada
+			let currentDate = frappe.datetime.nowdate(); // Retorna la fecha en formato 'YYYY-MM-DD'
+			frm.set_value("due_date", currentDate);
 		} else {
-			// Añade 15 días a la fecha actual
-			let currentDate = new Date();
-			let dueDate = new Date(currentDate.setDate(currentDate.getDate() + 15));
-			frm.set_value("due_date", dueDate);
+			// Añade 15 días a la fecha actual y formatea correctamente
+			let currentDate = frappe.datetime.now_date(); // Obtiene la fecha actual
+			let dueDate = frappe.datetime.add_days(currentDate, 15); // Suma 15 días
+			frm.set_value("due_date", dueDate); // Establece el valor correctamente formateado
 		}
 	},
+	
 	refresh: function (frm) {
 		if (frm.doc.docstatus === 0 && !frm.doc.is_return) {
 			frm.add_custom_button(

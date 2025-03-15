@@ -6,7 +6,7 @@ erpnext.PointOfSale.ItemDetails = class {
 		this.allow_rate_change = settings.allow_rate_change;
 		this.allow_discount_change = settings.allow_discount_change;
 		this.current_item = {};
-
+		this.allowed_discount = 0;
 		this.init_component();
 	}
 
@@ -15,8 +15,22 @@ erpnext.PointOfSale.ItemDetails = class {
 		this.init_child_components();
 		this.bind_events();
 		this.attach_shortcuts();
+		this.init_allowed_discount();
 	}
 
+	init_allowed_discount() {
+		const me = this;
+		frappe.db.get_value(
+			"Sales Discount",
+			{ user: frappe.session.user },
+			"discount",
+			function ({ discount }) {
+				if (discount) {
+					me.allowed_discount = discount;
+				}
+			}
+		);
+	}
 	prepare_dom() {
 		this.wrapper.append(`<section class="item-details-container"></section>`);
 
@@ -153,7 +167,7 @@ erpnext.PointOfSale.ItemDetails = class {
 		if (item.discount_percentage) {
 			this.$dicount_section.html(
 				`<div class="item-rate">${format_currency(item.price_list_rate, this.currency)}</div>
-				<div class="item-discount">${item.discount_percentage}% off</div>`
+				<div class="item-discount">${__("{0}% off",[item.discount_percentage])}</div>`
 			);
 			this.$item_price.html(format_currency(item.rate, this.currency));
 		} else {
@@ -164,22 +178,29 @@ erpnext.PointOfSale.ItemDetails = class {
 	render_form(item) {
 		const fields_to_display = this.get_form_fields(item);
 		this.$form_container.html("");
-		const super_this =this;
+		const super_this = this;
 		fields_to_display.forEach((fieldname, idx) => {
 			this.$form_container.append(
 				`<div class="${fieldname}-control" data-fieldname="${fieldname}"></div>`
 			);
 
 			const field_meta = this.item_meta.fields.find((df) => df.fieldname === fieldname);
-			fieldname === "discount_percentage" ? (field_meta.label = __("Discount (%)")) : "";
+			const discount = super_this.allowed_discount;
+			fieldname === "discount_percentage" ? (field_meta.label = __("Discount")+" (Max."+discount.toString()+"%)") : "";
 			const me = this;
 
 			this[`${fieldname}_control`] = frappe.ui.form.make_control({
 				df: {
 					...field_meta,
 					onchange: function () {
-						fieldname ==="discount_percentage" && super_this.discount_validate(this)
-						me.events.form_updated(me.current_item, fieldname, this.value);
+						const control = me[`${fieldname}_control`]; // Referencia al control actual
+
+						if ((fieldname === "discount_percentage") && (this.value > discount)) {
+							me.events.form_updated(me.current_item, fieldname, discount);
+							control.set_value(discount);
+						} else {
+							me.events.form_updated(me.current_item, fieldname, this.value);
+						}
 					},
 				},
 				parent: this.$form_container.find(`.${fieldname}-control`),
@@ -191,12 +212,6 @@ erpnext.PointOfSale.ItemDetails = class {
 		this.make_auto_serial_selection_btn(item);
 
 		this.bind_custom_control_change_event();
-	}
-
-	discount_validate(me){
-		if (me.value>=100){
-			me.value=10
-		}
 	}
 
 	get_form_fields(item) {

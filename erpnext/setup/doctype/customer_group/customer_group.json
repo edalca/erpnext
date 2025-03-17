@@ -8,6 +8,7 @@
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
+  "company",
   "customer_group_name",
   "parent_customer_group",
   "is_group",
@@ -16,7 +17,14 @@
   "payment_terms",
   "lft",
   "rgt",
-  "old_parent"
+  "old_parent",
+  "section_break_aogr",
+  "credit_limit_and_payment_terms_column",
+  "credit_limit",
+  "bypass_credit_limit_check",
+  "accounts_column",
+  "account",
+  "advance_account"
  ],
  "fields": [
   {
@@ -105,13 +113,58 @@
    "options": "Customer Group",
    "print_hide": 1,
    "report_hide": 1
+  },
+  {
+   "fieldname": "section_break_aogr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "credit_limit_and_payment_terms_column",
+   "fieldtype": "Column Break",
+   "label": "Credit Limit and Payment Terms"
+  },
+  {
+   "fieldname": "credit_limit",
+   "fieldtype": "Currency",
+   "label": "Credit Limit",
+   "precision": "2"
+  },
+  {
+   "default": "0",
+   "fieldname": "bypass_credit_limit_check",
+   "fieldtype": "Check",
+   "label": "Bypass Credit Limit Check at Sales Order"
+  },
+  {
+   "fieldname": "accounts_column",
+   "fieldtype": "Column Break",
+   "label": "Accounts"
+  },
+  {
+   "fieldname": "advance_account",
+   "fieldtype": "Link",
+   "label": "Advance Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "label": "Default Account",
+   "options": "Account"
   }
  ],
  "icon": "fa fa-sitemap",
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2025-03-06 21:57:41.981762",
+ "modified": "2025-03-16 01:49:29.173165",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Customer Group",

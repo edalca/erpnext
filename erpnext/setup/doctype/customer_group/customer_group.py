@@ -16,6 +16,11 @@ class CustomerGroup(NestedSet):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		account: DF.Link | None
+		advance_account: DF.Link | None
+		bypass_credit_limit_check: DF.Check
+		company: DF.Link
+		credit_limit: DF.Currency
 		customer_group_name: DF.Data
 		default_price_list: DF.Link | None
 		is_group: DF.Check
@@ -34,34 +39,32 @@ class CustomerGroup(NestedSet):
 		self.validate_currency_for_receivable_and_advance_account()
 
 	def validate_currency_for_receivable_and_advance_account(self):
-		for x in self.accounts:
-			receivable_account_currency = None
-			advance_account_currency = None
+		receivable_account_currency = None
+		advance_account_currency = None
+		if self.account:
+			receivable_account_currency = frappe.get_cached_value(
+				"Account", self.account, "account_currency"
+			)
 
-			if x.account:
-				receivable_account_currency = frappe.get_cached_value(
-					"Account", x.account, "account_currency"
-				)
+		if self.advance_account:
+			advance_account_currency = frappe.get_cached_value(
+				"Account", self.advance_account, "account_currency"
+			)
 
-			if x.advance_account:
-				advance_account_currency = frappe.get_cached_value(
-					"Account", x.advance_account, "account_currency"
+		if (
+			receivable_account_currency
+			and advance_account_currency
+			and receivable_account_currency != advance_account_currency
+		):
+			frappe.throw(
+				_(
+					"Both Receivable Account: {0} and Advance Account: {1} must be of same currency for company: {2}"
+				).format(
+					frappe.bold(self.account),
+					frappe.bold(self.advance_account),
+					frappe.bold(self.company),
 				)
-
-			if (
-				receivable_account_currency
-				and advance_account_currency
-				and receivable_account_currency != advance_account_currency
-			):
-				frappe.throw(
-					_(
-						"Both Receivable Account: {0} and Advance Account: {1} must be of same currency for company: {2}"
-					).format(
-						frappe.bold(x.account),
-						frappe.bold(x.advance_account),
-						frappe.bold(x.company),
-					)
-				)
+			)
 
 	def on_update(self):
 		super().on_update()

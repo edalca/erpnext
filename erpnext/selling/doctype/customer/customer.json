@@ -61,6 +61,7 @@
   "credit_limit_and_payment_terms_column",
   "payment_terms",
   "credit_limit",
+  "bypass_credit_limit_check",
   "accounts_column",
   "default_account",
   "advance_account",
@@ -548,6 +549,12 @@
    "fieldname": "loyalty_program_tier",
    "fieldtype": "Data",
    "label": "Loyalty Program Tier"
+  },
+  {
+   "default": "0",
+   "fieldname": "bypass_credit_limit_check",
+   "fieldtype": "Check",
+   "label": "Bypass Credit Limit Check at Sales Order"
   }
  ],
  "icon": "fa fa-user",
@@ -561,7 +568,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2025-03-10 00:43:42.437324",
+ "modified": "2025-03-16 01:31:48.897930",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Customer",

@@ -173,7 +173,7 @@ class SalesInvoice(SellingController):
 		selling_price_list: DF.Link
 		set_posting_time: DF.Check
 		set_target_warehouse: DF.Link | None
-		set_warehouse: DF.Link | None
+		set_warehouse: DF.Link
 		shipping_address: DF.SmallText | None
 		shipping_address_name: DF.Link | None
 		shipping_rule: DF.Link | None
@@ -619,8 +619,8 @@ class SalesInvoice(SellingController):
 
 		validate_against_credit_limit = False
 		bypass_credit_limit_check_at_sales_order = frappe.db.get_value(
-			"Customer Credit Limit",
-			filters={"parent": self.customer, "parenttype": "Customer", "company": self.company},
+			"Customer",
+			filters={"name": self.customer},
 			fieldname=["bypass_credit_limit_check"],
 		)
 
@@ -2527,6 +2527,17 @@ def update_address(doc, address_field, address_display_field, address_name):
 		doc.set(key, value)
 
 	doc.set(address_display_field, get_address_display(doc.get(address_field)))
+
+@frappe.whitelist()
+def get_user_warehouses():
+    user = frappe.session.user
+    pos_profiles = frappe.get_all(
+        "POS Profile",
+        filters={"disabled": 0},  # Solo perfiles POS activos
+        fields=["name", "warehouse"],
+        or_filters=[["POS Profile User", "user", "=", user]]  # Busca al usuario en la tabla secundaria
+    )
+    return pos_profiles
 
 
 @frappe.whitelist()

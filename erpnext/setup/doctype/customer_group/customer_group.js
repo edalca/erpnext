@@ -12,25 +12,25 @@ frappe.ui.form.on("Customer Group", {
 			};
 		});
 
-		frm.set_query("account", "accounts", function (doc, cdt, cdn) {
+		frm.set_query("account", function (doc) {
 			return {
-				filters: {
-					root_type: "Asset",
-					account_type: "Receivable",
-					company: locals[cdt][cdn].company,
-					is_group: 0,
-				},
+				filters: [
+					["root_type", "=", "Asset"],
+					["account_type", "=", "Receivable"],
+					["company", "=", doc.company],
+					["is_group", "=", 0],
+				],
 			};
 		});
 
-		frm.set_query("advance_account", "accounts", function (doc, cdt, cdn) {
+		frm.set_query("advance_account", function (doc) {
 			return {
-				filters: {
-					root_type: "Liability",
-					account_type: "Receivable",
-					company: locals[cdt][cdn].company,
-					is_group: 0,
-				},
+				filters: [
+					["root_type", "=", "Liability"],
+					["account_type", "=", "Receivable"],
+					["company", "=", doc.company],
+					["is_group", "=", 0],
+				],
 			};
 		});
 	},

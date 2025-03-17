@@ -20,6 +20,7 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 			Dunning: this.make_dunning.bind(this),
 			"Invoice Discounting": this.make_invoice_discounting.bind(this),
 		};
+
 	}
 	company() {
 		super.company();
@@ -48,10 +49,7 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 			// show debit_to in print format
 			this.frm.set_df_property("debit_to", "print_hide", 0);
 		}
-
-		erpnext.queries.setup_queries(this.frm, "Warehouse", function () {
-			return erpnext.queries.warehouse(me.frm.doc);
-		});
+		warehouses_permission(me.frm)
 
 		if (this.frm.doc.__islocal && this.frm.doc.is_pos) {
 			//Load pos profile data on the invoice if the default value of Is POS is 1
@@ -768,7 +766,6 @@ frappe.ui.form.on("Sales Invoice", {
 	},
 
 	update_stock: function (frm, dt, dn) {
-		frm.events.hide_fields(frm);
 		frm.trigger("reset_posting_time");
 	},
 
@@ -936,19 +933,13 @@ frappe.ui.form.on("Sales Invoice", {
 			frm.doc.timesheets.reduce((a, b) => a + (b["billing_hours"] || 0.0), 0.0)
 		);
 	},
-	payment_method: function (frm) {
-		if (frm.doc.payment_method === "Cash Payment") {
-			// Fecha actual formateada
-			let currentDate = frappe.datetime.nowdate(); // Retorna la fecha en formato 'YYYY-MM-DD'
-			frm.set_value("due_date", currentDate);
-		} else {
-			// Añade 15 días a la fecha actual y formatea correctamente
-			let currentDate = frappe.datetime.now_date(); // Obtiene la fecha actual
-			let dueDate = frappe.datetime.add_days(currentDate, 15); // Suma 15 días
-			frm.set_value("due_date", dueDate); // Establece el valor correctamente formateado
-		}
+	customer: function(frm){
+		get_credit_limit_customer(frm)
 	},
-	
+	payment_method: function (frm) {
+		get_credit_limit_customer(frm);
+	},
+
 	refresh: function (frm) {
 		if (frm.doc.docstatus === 0 && !frm.doc.is_return) {
 			frm.add_custom_button(
@@ -997,9 +988,6 @@ frappe.ui.form.on("Sales Invoice", {
 				__("Get Items From")
 			);
 		}
-		if (frm.doc.payment_method === "Cash Payment") {
-			frm.set_value("due_date", new Date());
-		}
 		if (frm.doc.is_debit_note) {
 			frm.set_df_property("return_against", "label", __("Adjustment Against"));
 		}
@@ -1011,51 +999,6 @@ frappe.ui.form.on("Sales Invoice Timesheet", {
 		frm.trigger("calculate_timesheet_totals");
 	},
 });
-
-frappe.ui.form.on("Sales Invoice Item", {
-	discount_percentage(frm, cdt, cdn) {
-		frappe.call({
-			method: "frappe.client.get_value", // Método del lado del servidor
-			args: {
-				doctype: "Sales Discount", // DocType del cual quieres obtener datos
-				filters: { user: frappe.session.user }, // Filtro, por ejemplo 'name' del Company
-				fieldname: "discount", // El campo que quieres obtener
-			},
-			callback: function (response) {
-				var row = locals[cdt][cdn];
-				if (response.message) {
-					let discount = response.message.discount; // Aquí tienes el valor del campo
-					if (row.discount_percentage > discount) {
-						frappe.model.set_value(cdt, cdn, "discount_percentage", discount);
-					}
-					if (!discount) frappe.model.set_value(cdt, cdn, "discount_percentage", 0);
-				}
-			},
-		});
-		calculate_amount(cdt, cdn);
-	},
-	qty(frm, cdt, cdn) {
-		calculate_amount(cdt, cdn);
-	},
-	rate(frm, cdt, cdn) {
-		calculate_amount(cdt, cdn);
-	},
-});
-
-var calculate_amount = function (cdt, cdn) {
-	var row = locals[cdt][cdn];
-
-	// Asegúrate de que qty, rate y discount tengan valores válidos
-	var qty = row.qty || 0; // Por defecto 0 si no está definido
-	var rate = row.rate || 0; // Por defecto 0 si no está definido
-	var discount = row.discount || 0; // Por defecto 0 si no está definido
-
-	// Calcula el monto
-	var amount = qty * rate - qty * rate * (discount / 100);
-
-	// Actualiza el valor del campo 'amount'
-	frappe.model.set_value(cdt, cdn, "amount", amount);
-};
 
 var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {
 	frappe.call({
@@ -1071,6 +1014,94 @@ var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {
 		},
 	});
 };
+
+var get_credit_limit_customer = function (frm) {
+    // Verifica si el documento ya está validado
+    if (frm.doc.docstatus === 1) {
+        return;
+    }
+	if (!frm.doc.customer) {
+        frappe.msgprint({
+            title: __("Customer Missing"),
+            indicator: "red",
+            message: __("Please select a customer before proceeding.")
+        });
+        return;
+    }
+    if (frm.doc.payment_method === "Cash Payment") {
+        // Fecha actual formateada
+        let currentDate = frappe.datetime.nowdate(); // Retorna la fecha en formato 'YYYY-MM-DD'
+        frm.set_value("due_date", currentDate);
+    } else if (frm.doc.payment_method === "Credit Payment") {
+        frm.call({
+            method: "erpnext.selling.doctype.customer.customer.check_customer_credit_info",
+            args: {
+                customer: frm.doc.customer,
+                company: frm.doc.company,
+            },
+            callback: function (r) {
+                if (r && r.message) {
+                    // Accede a los valores retornados
+                    let credit_limit = r.message.credit_limit || 0; // Valor predeterminado
+                    let credit_days = r.message.days || 0; // Días de crédito predeterminado
+
+                    if (credit_limit === 0) {
+                        // Muestra un mensaje si el cliente no tiene crédito
+                        frappe.msgprint({
+                            title: __("Credit Information"),
+                            indicator: "red",
+                            message: __("This customer does not have any credit assigned. Switching to Cash Payment"),
+                        });
+                        // Cambia el método de pago a "Cash Payment"
+                        frm.set_value("payment_method", "Cash Payment");
+                        // Configura la fecha de vencimiento como hoy
+                        let currentDate = frappe.datetime.nowdate();
+                        frm.set_value("due_date", currentDate);
+                        frm.set_value("is_pos",1)
+                    } else {
+                        // Si tiene crédito, calcula la fecha de vencimiento
+                        let currentDate = frappe.datetime.nowdate();
+                        let dueDate = frappe.datetime.add_days(currentDate, credit_days);
+                        frm.set_value("due_date", dueDate);
+                        frm.set_value("is_pos",0)
+
+                    }
+                } else {
+                    // Maneja el caso en el que no haya respuesta o esté vacía
+                    frappe.msgprint({
+                        title: __("Error"),
+                        indicator: "orange",
+                        message: __("Unable to fetch credit information for the customer."),
+                    });
+                }
+            },
+        });
+    }
+};
+
+var warehouses_permission = function (frm) {
+    frappe.call({
+        method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.get_user_warehouses", // Cambia por la ruta correcta de tu método
+        callback: function (r) {
+            if (r && r.message && r.message.length > 0) {
+                // Extrae los almacenes de los resultados
+                let warehouses = r.message.map(profile => profile.warehouse);
+				erpnext.queries.setup_queries(frm, "Warehouse", function () {
+					return {
+						filters: [
+							["Warehouse", "company", "in", ["", cstr(frm.doc.company)]],
+							["Warehouse", "is_group", "=", 0],
+							["Warehouse","name","in",warehouses]
+						],
+					};
+				});
+
+            }
+        }
+    });
+};
+
+
 
 /*var select_loyalty_program = function (frm, loyalty_programs) {
 	var dialog = new frappe.ui.Dialog({

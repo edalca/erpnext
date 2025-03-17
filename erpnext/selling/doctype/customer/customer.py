@@ -37,6 +37,7 @@ class Customer(TransactionBase):
 
 		account_manager: DF.Link | None
 		advance_account: DF.Link | None
+		bypass_credit_limit_check: DF.Check
 		companies: DF.Table[AllowedToTransactWith]
 		company: DF.Link
 		credit_limit: DF.Currency
@@ -287,42 +288,18 @@ class Customer(TransactionBase):
 			)
 
 	def validate_credit_limit_on_change(self):
-		if self.get("__islocal") or not self.credit_limits:
+		if self.get("__islocal") or not self.credit_limit or self.credit_limit == 0:
 			return
 
-		past_credit_limits = [
-			d.credit_limit
-			for d in frappe.db.get_all(
-				"Customer Credit Limit",
-				filters={"parent": self.name},
-				fields=["credit_limit"],
-				order_by="company",
+		outstanding_amt = get_customer_outstanding(
+			self.name, self.company, ignore_outstanding_sales_order=self.bypass_credit_limit_check
+		)
+		if flt(self.credit_limit) < outstanding_amt:
+			frappe.throw(
+				_(
+					"""New credit limit is less than current outstanding amount for the customer. Credit limit has to be atleast {0}"""
+				).format(outstanding_amt)
 			)
-		]
-
-		current_credit_limits = [d.credit_limit for d in sorted(self.credit_limits, key=lambda k: k.company)]
-
-		if past_credit_limits == current_credit_limits:
-			return
-
-		company_record = []
-		for limit in self.credit_limits:
-			if limit.company in company_record:
-				frappe.throw(
-					_("Credit limit is already defined for the Company {0}").format(limit.company, self.name)
-				)
-			else:
-				company_record.append(limit.company)
-
-			outstanding_amt = get_customer_outstanding(
-				self.name, limit.company, ignore_outstanding_sales_order=limit.bypass_credit_limit_check
-			)
-			if flt(limit.credit_limit) < outstanding_amt:
-				frappe.throw(
-					_(
-						"""New credit limit is less than current outstanding amount for the customer. Credit limit has to be atleast {0}"""
-					).format(outstanding_amt)
-				)
 
 	def on_trash(self):
 		if self.customer_primary_contact:
@@ -511,6 +488,33 @@ def check_credit_limit(customer, company, ignore_outstanding_sales_order=False, 
 				},
 			)
 
+@frappe.whitelist()
+def check_customer_credit_info(customer, company):
+    # Inicializa los valores predeterminados
+    credit_limit = 0
+    days = 0
+
+    # Obtén el límite de crédito usando una función personalizada
+    credit_limit = get_credit_limit(customer, company)
+
+    # Obtén los términos de pago configurados para el cliente
+    payment_terms = frappe.db.get_value("Customer", {"name": customer}, "payment_terms")
+
+    if payment_terms:
+        # Si los términos de pago existen, obtén los días de crédito
+        days = frappe.db.get_value(
+            "Payment Terms Template Detail",
+            {"parent": payment_terms},
+            "credit_days",  # Asegúrate de que este campo sea el correcto
+        )
+
+    # Devuelve un diccionario con los valores obtenidos
+    return {
+        "credit_limit": credit_limit,
+        "days": days
+    }
+
+
 
 @frappe.whitelist()
 def send_emails(args):
@@ -611,8 +615,8 @@ def get_credit_limit(customer, company):
 
 	if customer:
 		credit_limit = frappe.db.get_value(
-			"Customer Credit Limit",
-			{"parent": customer, "parenttype": "Customer", "company": company},
+			"Customer",
+			{"name": customer},
 			"credit_limit",
 		)
 
@@ -620,8 +624,8 @@ def get_credit_limit(customer, company):
 			customer_group = frappe.get_cached_value("Customer", customer, "customer_group")
 
 			result = frappe.db.get_values(
-				"Customer Credit Limit",
-				{"parent": customer_group, "parenttype": "Customer Group", "company": company},
+				"Customer Group",
+				{"name": customer_group,},
 				fieldname=["credit_limit", "bypass_credit_limit_check"],
 				as_dict=True,
 			)

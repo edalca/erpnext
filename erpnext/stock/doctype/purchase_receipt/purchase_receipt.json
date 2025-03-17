@@ -2,7 +2,7 @@
  "actions": [],
  "allow_auto_repeat": 1,
  "allow_import": 1,
- "autoname": "naming_series:",
+ "autoname": "format:{abbr}-PR-{YY}-{####}",
  "creation": "2013-05-21 16:16:39",
  "doctype": "DocType",
  "document_type": "Document",
@@ -12,7 +12,6 @@
   "supplier_section",
   "column_break0",
   "title",
-  "naming_series",
   "supplier",
   "supplier_name",
   "supplier_delivery_note",
@@ -23,6 +22,7 @@
   "set_posting_time",
   "column_break_12",
   "company",
+  "abbr",
   "apply_putaway_rule",
   "is_return",
   "return_against",
@@ -176,18 +176,6 @@
    "label": "Title",
    "no_copy": 1,
    "print_hide": 1
-  },
-  {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "no_copy": 1,
-   "oldfieldname": "naming_series",
-   "oldfieldtype": "Select",
-   "options": "MAT-PRE-.YYYY.-\nMAT-PR-RET-.YYYY.-",
-   "print_hide": 1,
-   "reqd": 1,
-   "set_only_once": 1
   },
   {
    "bold": 1,
@@ -1138,6 +1126,7 @@
    "collapsible": 1,
    "fieldname": "accounting_dimensions_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Accounting Dimensions"
   },
   {
@@ -1267,17 +1256,24 @@
    "no_copy": 1,
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fetch_from": "company.abbr",
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbr"
   }
  ],
  "icon": "fa fa-truck",
  "idx": 261,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-13 16:55:14.129055",
+ "modified": "2025-03-15 23:21:02.131376",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Purchase Receipt",
- "naming_rule": "By \"Naming Series\" field",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

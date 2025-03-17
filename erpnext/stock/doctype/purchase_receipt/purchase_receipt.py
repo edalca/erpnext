@@ -28,17 +28,13 @@ class PurchaseReceipt(BuyingController):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
+		from erpnext.accounts.doctype.pricing_rule_detail.pricing_rule_detail import PricingRuleDetail
+		from erpnext.accounts.doctype.purchase_taxes_and_charges.purchase_taxes_and_charges import PurchaseTaxesandCharges
+		from erpnext.buying.doctype.purchase_receipt_item_supplied.purchase_receipt_item_supplied import PurchaseReceiptItemSupplied
+		from erpnext.stock.doctype.purchase_receipt_item.purchase_receipt_item import PurchaseReceiptItem
 		from frappe.types import DF
 
-		from erpnext.accounts.doctype.pricing_rule_detail.pricing_rule_detail import PricingRuleDetail
-		from erpnext.accounts.doctype.purchase_taxes_and_charges.purchase_taxes_and_charges import (
-			PurchaseTaxesandCharges,
-		)
-		from erpnext.buying.doctype.purchase_receipt_item_supplied.purchase_receipt_item_supplied import (
-			PurchaseReceiptItemSupplied,
-		)
-		from erpnext.stock.doctype.purchase_receipt_item.purchase_receipt_item import PurchaseReceiptItem
-
+		abbr: DF.Data | None
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
 		amended_from: DF.Link | None
@@ -86,7 +82,6 @@ class PurchaseReceipt(BuyingController):
 		lr_date: DF.Date | None
 		lr_no: DF.Data | None
 		named_place: DF.Data | None
-		naming_series: DF.Literal["MAT-PRE-.YYYY.-", "MAT-PR-RET-.YYYY.-"]
 		net_total: DF.Currency
 		other_charges_calculation: DF.TextEditor | None
 		per_billed: DF.Percent
@@ -112,9 +107,7 @@ class PurchaseReceipt(BuyingController):
 		shipping_address: DF.Link | None
 		shipping_address_display: DF.SmallText | None
 		shipping_rule: DF.Link | None
-		status: DF.Literal[
-			"", "Draft", "Partly Billed", "To Bill", "Completed", "Return Issued", "Cancelled", "Closed"
-		]
+		status: DF.Literal["", "Draft", "Partly Billed", "To Bill", "Completed", "Return Issued", "Cancelled", "Closed"]
 		subcontracting_receipt: DF.Link | None
 		supplied_items: DF.Table[PurchaseReceiptItemSupplied]
 		supplier: DF.Link

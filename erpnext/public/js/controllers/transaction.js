@@ -2452,6 +2452,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 
 	set_query_for_item_tax_template(doc, cdt, cdn) {
 		var item = frappe.get_doc(cdt, cdn);
+		console.log(item)
 		if(!item.item_code) {
 			return doc.company ? {filters: {company: doc.company}} : {};
 		} else {

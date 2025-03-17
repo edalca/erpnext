@@ -547,6 +547,7 @@ erpnext.PointOfSale.ItemCart = class {
 	}
 
 	render_taxes(taxes) {
+		console.log(taxes)
 		if (taxes && taxes.length) {
 			const currency = this.events.get_frm().doc.currency;
 			const taxes_html = taxes

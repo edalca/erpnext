@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "format:SI-{abbr}-{YY}-{#####}",
+ "autoname": "format:{abbr}-SI-{YY}-{#####}",
  "creation": "2022-01-25 10:29:57.771398",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -604,7 +604,8 @@
    "hide_seconds": 1,
    "label": "Source Warehouse",
    "options": "Warehouse",
-   "print_hide": 1
+   "print_hide": 1,
+   "reqd": 1
   },
   {
    "fieldname": "items_section",
@@ -617,7 +618,7 @@
    "options": "fa fa-shopping-cart"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "update_stock",
    "fieldtype": "Check",
    "hide_days": 1,
@@ -625,7 +626,8 @@
    "label": "Update Stock",
    "oldfieldname": "update_stock",
    "oldfieldtype": "Check",
-   "print_hide": 1
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "scan_barcode",
@@ -2003,7 +2005,8 @@
    "fieldname": "payment_method",
    "fieldtype": "Select",
    "label": "Payment Method",
-   "options": "Cash Payment\nCredit Payment"
+   "options": "Cash Payment\nCredit Payment",
+   "reqd": 1
   },
   {
    "fieldname": "due_date",
@@ -2018,7 +2021,6 @@
   {
    "fieldname": "taxes",
    "fieldtype": "Table",
-   "hidden": 1,
    "label": "Sales Taxes and Charges",
    "options": "Sales Taxes and Charges"
   },
@@ -2137,7 +2139,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-03-14 03:45:40.471861",
+ "modified": "2025-03-16 20:11:21.521702",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

@@ -115,8 +115,7 @@
   "expenses_included_in_valuation",
   "manufacturing_section",
   "default_operating_cost_account",
-  "dashboard_tab",
-  "amended_from"
+  "dashboard_tab"
  ],
  "fields": [
   {
@@ -851,16 +850,6 @@
    "options": "Advance Payment Date\nOldest Of Invoice Or Advance\nReconciliation Date"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Company",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "fieldname": "commercial_name",
    "fieldtype": "Data",
    "label": "Commercial Name",
@@ -871,7 +860,7 @@
  "idx": 1,
  "image_field": "company_logo",
  "links": [],
- "modified": "2025-03-09 00:54:46.024855",
+ "modified": "2025-03-22 12:22:00.317300",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

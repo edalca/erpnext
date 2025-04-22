@@ -9,7 +9,7 @@
  "hide_custom": 0,
  "icon": "support",
  "idx": 0,
- "is_hidden": 1,
+ "is_hidden": 0,
  "label": "Support",
  "links": [
   {
@@ -171,7 +171,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-04-02 10:23:50.145038",
+ "modified": "2025-04-22 15:22:41.289840",
  "modified_by": "Administrator",
  "module": "Support",
  "name": "Support",
@@ -181,7 +181,11 @@
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
- "roles": [],
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ],
  "sequence_id": 12.0,
  "shortcuts": [
   {

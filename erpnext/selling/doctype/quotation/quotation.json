@@ -51,6 +51,7 @@
   "incoterm",
   "named_place",
   "section_break_36",
+  "column_break_hyvk",
   "taxes",
   "section_break_39",
   "base_total_taxes_and_charges",
@@ -437,6 +438,7 @@
    "collapsible": 1,
    "fieldname": "pricing_rule_details",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Pricing Rules"
   },
   {
@@ -505,6 +507,7 @@
   {
    "fieldname": "taxes_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "hide_border": 1,
    "label": "Taxes and Charges",
    "oldfieldtype": "Section Break",
@@ -532,6 +535,7 @@
   {
    "fieldname": "section_break_36",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "hide_border": 1
   },
   {
@@ -555,6 +559,7 @@
    "collapsible": 1,
    "fieldname": "sec_tax_breakup",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Tax Breakup"
   },
   {
@@ -568,7 +573,8 @@
   },
   {
    "fieldname": "section_break_39",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "base_total_taxes_and_charges",
@@ -596,6 +602,7 @@
    "collapsible": 1,
    "fieldname": "section_break_44",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Additional Discount"
   },
   {
@@ -950,6 +957,7 @@
    "depends_on": "packed_items",
    "fieldname": "bundle_items_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Bundle Items",
    "options": "fa fa-suitcase",
    "print_hide": 1
@@ -1084,13 +1092,18 @@
    "label": "Company Contact Person",
    "options": "Contact",
    "print_hide": 1
+  },
+  {
+   "fieldname": "column_break_hyvk",
+   "fieldtype": "Column Break",
+   "hidden": 1
   }
  ],
  "icon": "fa fa-shopping-cart",
  "idx": 82,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-26 12:43:29.293637",
+ "modified": "2025-04-22 16:06:33.030337",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Quotation",
@@ -1181,6 +1194,7 @@
    "role": "Maintenance User"
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "status,transaction_date,party_name,order_type",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

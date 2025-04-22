@@ -278,10 +278,20 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Compra & Venta",
-   "link_count": 3,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Point of Sale",
+   "link_count": 0,
+   "link_to": "point-of-sale",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -306,7 +316,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Quotation",
+   "label": "Cotizaci\u00f3n",
    "link_count": 0,
    "link_to": "Quotation",
    "link_type": "DocType",
@@ -317,7 +327,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Compa\u00f1\u00eda",
-   "link_count": 3,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -354,9 +364,19 @@
    "link_type": "DocType",
    "onboard": 1,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Discount",
+   "link_count": 0,
+   "link_to": "Sales Discount",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-03-07 01:27:03.902008",
+ "modified": "2025-04-22 16:02:34.498491",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Home",

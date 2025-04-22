@@ -499,6 +499,7 @@
    "collapsible": 1,
    "fieldname": "currency_and_price_list",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Currency and Price List",
    "options": "fa fa-tag"
   },
@@ -624,6 +625,7 @@
    "collapsible": 1,
    "fieldname": "pricing_rule_details",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Pricing Rules"
   },
   {
@@ -638,6 +640,7 @@
    "collapsible_depends_on": "supplied_items",
    "fieldname": "raw_materials_supplied",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Raw Materials Supplied"
   },
   {
@@ -708,6 +711,7 @@
   {
    "fieldname": "taxes_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "hide_border": 1,
    "label": "Taxes and Charges",
    "oldfieldtype": "Section Break",
@@ -734,6 +738,7 @@
   {
    "fieldname": "section_break_51",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "hide_border": 1
   },
   {
@@ -771,6 +776,7 @@
   {
    "fieldname": "totals",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "oldfieldtype": "Section Break",
    "options": "fa fa-money"
   },
@@ -840,6 +846,7 @@
    "collapsible": 1,
    "fieldname": "section_break_44",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Additional Discount"
   },
   {
@@ -1344,6 +1351,7 @@
    "collapsible": 1,
    "fieldname": "accounting_dimensions_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Accounting Dimensions "
   },
   {
@@ -1633,7 +1641,7 @@
  "idx": 204,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-14 11:39:04.564610",
+ "modified": "2025-04-22 00:03:47.775737",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice",
@@ -1688,6 +1696,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "posting_date, supplier, bill_no, base_grand_total, outstanding_amount",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

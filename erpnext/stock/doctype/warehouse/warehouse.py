@@ -47,8 +47,9 @@ class Warehouse(NestedSet):
 	def autoname(self):
 		if self.company:
 			suffix = " - " + frappe.get_cached_value("Company", self.company, "abbr")
+			parent = self.parent_warehouse if self.parent_warehouse+"-" else ""
 			if not self.warehouse_name.endswith(suffix):
-				self.name = self.warehouse_name + suffix
+				self.name = parent + self.warehouse_name + suffix
 				return
 
 		self.name = self.warehouse_name

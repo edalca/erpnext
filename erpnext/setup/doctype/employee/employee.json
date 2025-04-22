@@ -19,9 +19,11 @@
   "last_name",
   "employee_name",
   "column_break_9",
+  "country",
+  "nationality",
+  "municipality",
   "gender",
   "date_of_birth",
-  "salutation",
   "column_break1",
   "date_of_joining",
   "image",
@@ -145,14 +147,6 @@
    "set_only_once": 1
   },
   {
-   "fieldname": "salutation",
-   "fieldtype": "Link",
-   "label": "Salutation",
-   "oldfieldname": "salutation",
-   "oldfieldtype": "Select",
-   "options": "Salutation"
-  },
-  {
    "fieldname": "first_name",
    "fieldtype": "Data",
    "label": "First Name",
@@ -182,8 +176,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "user_id.user_image",
-   "fetch_if_empty": 1,
    "fieldname": "image",
    "fieldtype": "Attach Image",
    "hidden": 1,
@@ -277,6 +269,7 @@
    "collapsible": 1,
    "fieldname": "erpnext_user",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "User Details"
   },
   {
@@ -817,6 +810,27 @@
    "fieldname": "iban",
    "fieldtype": "Data",
    "label": "IBAN"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Pais de Origen",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Link",
+   "label": "Nacionalidad",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "municipality",
+   "fieldtype": "Link",
+   "label": "Municipio",
+   "options": "Municipality",
+   "reqd": 1
   }
  ],
  "icon": "fa fa-user",
@@ -824,7 +838,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2024-01-03 17:36:20.984421",
+ "modified": "2025-04-02 10:41:37.150689",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
@@ -871,5 +885,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "employee_name"
+ "title_field": "employee_name",
+ "track_changes": 1
 }

@@ -51,6 +51,7 @@
   {
    "fieldname": "warehouse_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Warehouse Name",
    "oldfieldname": "warehouse_name",
    "oldfieldtype": "Data",
@@ -264,7 +265,7 @@
  "idx": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2025-03-10 00:46:00.780302",
+ "modified": "2025-03-22 12:53:43.090349",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Warehouse",
@@ -318,8 +319,10 @@
   }
  ],
  "show_name_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "warehouse_name",
  "track_changes": 1
 }

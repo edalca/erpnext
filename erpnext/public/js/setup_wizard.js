@@ -24,6 +24,18 @@ erpnext.setup.slides_settings = [
 				fieldtype: "Data",
 				reqd: 1,
 			},
+			{
+				fieldname:"commercial_name",
+				label: __("Commercial Name"),
+				fieldtype: "Data",
+				reqd: 1,
+			},
+			{
+				fieldname:"tax_id",
+				label: __("Tax ID"),
+				fieldtype: "Data",
+				reqd: 1,
+			},
 			{ fieldtype: "Column Break" },
 			{
 				fieldname: "company_abbr",

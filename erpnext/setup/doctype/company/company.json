@@ -270,7 +270,7 @@
    "fieldname": "tax_id",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "RTN",
+   "label": "Tax ID",
    "reqd": 1,
    "unique": 1
   },

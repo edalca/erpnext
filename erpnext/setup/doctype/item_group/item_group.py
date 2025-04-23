@@ -20,16 +20,32 @@ class ItemGroup(NestedSet):
         from frappe.types import DF
 
         abbr: DF.Data | None
+        buying_cost_center: DF.Link | None
         company: DF.Link
+        default_discount_account: DF.Link | None
+        default_price_list: DF.Link | None
+        default_provisional_account: DF.Link | None
+        default_supplier: DF.Link | None
+        default_warehouse: DF.Link | None
+        deferred_expense_account: DF.Link | None
+        deferred_revenue_account: DF.Link | None
+        expense_account: DF.Link | None
         image: DF.AttachImage | None
+        income_account: DF.Link | None
         is_group: DF.Check
         item_group_defaults: DF.Table[ItemDefault]
         item_group_name: DF.Data
+        item_tax_template: DF.Link | None
         lft: DF.Int
+        maximum_net_rate: DF.Float
+        minimum_net_rate: DF.Float
         old_parent: DF.Link | None
         parent_item_group: DF.Link | None
         rgt: DF.Int
+        selling_cost_center: DF.Link | None
+        tax_category: DF.Link | None
         taxes: DF.Table[ItemTax]
+        valid_from: DF.Date | None
     # end: auto-generated types
 
     def autoname(self):

@@ -2016,7 +2016,8 @@
   },
   {
    "fieldname": "section_break_eafb",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "taxes",
@@ -2088,7 +2089,8 @@
   },
   {
    "fieldname": "section_break_debo",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "base_total_taxes_and_charges",
@@ -2139,7 +2141,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-03-16 20:11:21.521702",
+ "modified": "2025-04-23 00:30:44.091185",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

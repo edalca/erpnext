@@ -435,6 +435,8 @@ def install_company(args):
 		{
 			"doctype": "Company",
 			"company_name": args.company_name,
+			"legal_name": args.legal_name,
+			"tax_id": args.tax_id,
 			"enable_perpetual_inventory": 1,
 			"abbr": args.company_abbr,
 			"default_currency": args.currency,

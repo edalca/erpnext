@@ -35,7 +35,6 @@ class Company(Document):
 		book_advance_payments_in_separate_party_account: DF.Check
 		capital_work_in_progress_account: DF.Link | None
 		chart_of_accounts: DF.Literal[None]
-		commercial_name: DF.Data
 		company_description: DF.TextEditor | None
 		company_logo: DF.AttachImage | None
 		company_name: DF.Data
@@ -81,6 +80,7 @@ class Company(Document):
 		expenses_included_in_asset_valuation: DF.Link | None
 		expenses_included_in_valuation: DF.Link | None
 		fax: DF.Data | None
+		legal_name: DF.Data
 		monthly_sales_target: DF.Currency
 		payment_terms: DF.Link | None
 		phone_no: DF.Data | None

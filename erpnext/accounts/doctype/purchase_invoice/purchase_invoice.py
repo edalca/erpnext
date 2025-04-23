@@ -69,6 +69,7 @@ class PurchaseInvoice(BuyingController):
 		from erpnext.buying.doctype.purchase_receipt_item_supplied.purchase_receipt_item_supplied import PurchaseReceiptItemSupplied
 		from frappe.types import DF
 
+		abbr: DF.Data | None
 		additional_discount_percentage: DF.Float
 		address_display: DF.SmallText | None
 		advance_tax: DF.Table[AdvanceTax]
@@ -131,7 +132,6 @@ class PurchaseInvoice(BuyingController):
 		letter_head: DF.Link | None
 		mode_of_payment: DF.Link | None
 		named_place: DF.Data | None
-		naming_series: DF.Literal["ACC-PINV-.YYYY.-", "ACC-PINV-RET-.YYYY.-"]
 		net_total: DF.Currency
 		on_hold: DF.Check
 		only_include_allocated_payments: DF.Check
@@ -220,8 +220,6 @@ class PurchaseInvoice(BuyingController):
 
 	def onload(self):
 		super().onload()
-		supplier_tds = frappe.db.get_value("Supplier", self.supplier, "tax_withholding_category")
-		self.set_onload("supplier_tds", supplier_tds)
 
 		if self.is_new():
 			self.set("tax_withheld_vouchers", [])
@@ -320,12 +318,6 @@ class PurchaseInvoice(BuyingController):
 			self.due_date = get_due_date(
 				self.posting_date, "Supplier", self.supplier, self.company, self.bill_date
 			)
-
-		tds_category = frappe.db.get_value("Supplier", self.supplier, "tax_withholding_category")
-		if tds_category and not for_validate:
-			self.apply_tds = 1
-			self.tax_withholding_category = tds_category
-			self.set_onload("supplier_tds", tds_category)
 
 		super().set_missing_values(for_validate)
 

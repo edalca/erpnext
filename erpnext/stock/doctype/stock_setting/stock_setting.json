@@ -10,7 +10,6 @@
   "defaults_tab",
   "item_defaults_section",
   "company",
-  "company_name",
   "item_naming_by",
   "valuation_method",
   "item_group",
@@ -479,19 +478,12 @@
    "label": "Company",
    "options": "Company",
    "unique": 1
-  },
-  {
-   "fetch_from": "company.commercial_name",
-   "fieldname": "company_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Company Name"
   }
  ],
  "icon": "icon-cog",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-16 01:20:27.159110",
+ "modified": "2025-04-23 00:04:30.549160",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Stock Setting",
@@ -517,6 +509,6 @@
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],
- "title_field": "company_name",
+ "title_field": "company",
  "track_changes": 1
 }

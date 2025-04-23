@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:tax_id",
+ "autoname": "field:company_name",
  "creation": "2022-01-25 10:29:55.938239",
  "description": "Legal Entity / Subsidiary with a separate Chart of Accounts belonging to the Organization.",
  "doctype": "DocType",
@@ -13,7 +13,7 @@
   "company_name",
   "tax_id",
   "abbr",
-  "commercial_name",
+  "legal_name",
   "default_holiday_list",
   "cb0",
   "country",
@@ -126,7 +126,7 @@
   {
    "fieldname": "company_name",
    "fieldtype": "Data",
-   "label": "Registered Name",
+   "label": "Company Name",
    "oldfieldname": "company_name",
    "oldfieldtype": "Data",
    "reqd": 1,
@@ -850,9 +850,9 @@
    "options": "Advance Payment Date\nOldest Of Invoice Or Advance\nReconciliation Date"
   },
   {
-   "fieldname": "commercial_name",
+   "fieldname": "legal_name",
    "fieldtype": "Data",
-   "label": "Commercial Name",
+   "label": "Legal Name",
    "reqd": 1
   }
  ],
@@ -860,7 +860,7 @@
  "idx": 1,
  "image_field": "company_logo",
  "links": [],
- "modified": "2025-03-22 12:22:00.317300",
+ "modified": "2025-04-22 23:31:43.740251",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",
@@ -927,6 +927,6 @@
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],
- "title_field": "commercial_name",
+ "title_field": "company_name",
  "track_changes": 1
 }

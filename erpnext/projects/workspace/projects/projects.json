@@ -14,7 +14,7 @@
  "hide_custom": 0,
  "icon": "project",
  "idx": 0,
- "is_hidden": 1,
+ "is_hidden": 0,
  "label": "Projects",
  "links": [
   {
@@ -192,7 +192,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-04-02 10:23:48.050083",
+ "modified": "2025-04-22 23:32:46.841140",
  "modified_by": "Administrator",
  "module": "Projects",
  "name": "Projects",

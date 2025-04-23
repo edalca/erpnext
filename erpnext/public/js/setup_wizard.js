@@ -25,14 +25,8 @@ erpnext.setup.slides_settings = [
 				reqd: 1,
 			},
 			{
-				fieldname:"commercial_name",
-				label: __("Commercial Name"),
-				fieldtype: "Data",
-				reqd: 1,
-			},
-			{
-				fieldname:"tax_id",
-				label: __("Tax ID"),
+				fieldname:"legal_name",
+				label: __("Legal Name"),
 				fieldtype: "Data",
 				reqd: 1,
 			},
@@ -40,6 +34,12 @@ erpnext.setup.slides_settings = [
 			{
 				fieldname: "company_abbr",
 				label: __("Company Abbreviation"),
+				fieldtype: "Data",
+				reqd: 1,
+			},
+			{
+				fieldname:"tax_id",
+				label: __("Tax ID"),
 				fieldtype: "Data",
 				reqd: 1,
 			},

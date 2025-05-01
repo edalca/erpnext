@@ -158,7 +158,22 @@ erpnext.sales_common = {
 			discount_percentage(doc, cdt, cdn) {
 				var item = frappe.get_doc(cdt, cdn);
 				item.discount_amount = 0.0;
+				console.log(item)
 				this.apply_discount_on_item(doc, cdt, cdn, "discount_percentage");
+			}
+
+			init_allowed_discount() {
+				const me = this;
+				frappe.db.get_value(
+					"Sales Discount",
+					{ user: frappe.session.user },
+					"discount",
+					function ({ discount }) {
+						if (discount) {
+							me.allowed_discount = discount;
+						}
+					}
+				);
 			}
 
 			discount_amount(doc, cdt, cdn) {
@@ -200,7 +215,7 @@ erpnext.sales_common = {
 
 					sales_person.allocated_amount = flt(
 						(this.frm.doc.amount_eligible_for_commission * sales_person.allocated_percentage) /
-							100.0,
+						100.0,
 						precision("allocated_amount", sales_person)
 					);
 					refresh_field(["allocated_amount"], sales_person);
@@ -304,7 +319,7 @@ erpnext.sales_common = {
 
 					sales_person.allocated_amount = flt(
 						(me.frm.doc.amount_eligible_for_commission * sales_person.allocated_percentage) /
-							100.0,
+						100.0,
 						precision("allocated_amount", sales_person)
 					);
 				});
@@ -532,3 +547,4 @@ erpnext.pre_sales = {
 		});
 	},
 };
+

@@ -52,8 +52,9 @@ class SalesInvoiceItem(Document):
 		is_fixed_asset: DF.Check
 		is_free_item: DF.Check
 		item_code: DF.Link | None
+		item_code_data: DF.Data | None
 		item_group: DF.Link | None
-		item_name: DF.Data
+		item_name: DF.Data | None
 		item_tax_rate: DF.SmallText | None
 		item_tax_template: DF.Link | None
 		margin_rate_or_amount: DF.Float

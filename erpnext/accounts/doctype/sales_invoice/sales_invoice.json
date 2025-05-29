@@ -2140,7 +2140,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-05-01 15:31:38.207191",
+ "modified": "2025-05-10 15:40:50.330303",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",
@@ -2193,7 +2193,7 @@
  "sort_order": "DESC",
  "states": [],
  "timeline_field": "customer",
- "title_field": "title",
+ "title_field": "customer_name",
  "track_changes": 1,
  "track_seen": 1
 }

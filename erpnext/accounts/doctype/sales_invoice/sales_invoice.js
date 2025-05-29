@@ -692,6 +692,14 @@ frappe.ui.form.on("Sales Invoice", {
 			};
 		});
 
+		frm.set_query("customer",function(){
+			return {
+				filters:{
+					company:frm.doc.company
+				}
+			}
+		});
+
 		(frm.custom_make_buttons = {
 			"Delivery Note": "Delivery",
 			"Sales Invoice": "Return / Credit Note",

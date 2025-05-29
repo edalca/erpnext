@@ -78,6 +78,7 @@ class Quotation(SellingController):
 		other_charges_calculation: DF.TextEditor | None
 		packed_items: DF.Table[PackedItem]
 		party_name: DF.DynamicLink | None
+		payment_condition: DF.Literal["Contado", "Credito"]
 		payment_schedule: DF.Table[PaymentSchedule]
 		payment_terms_template: DF.Link | None
 		plc_conversion_rate: DF.Float

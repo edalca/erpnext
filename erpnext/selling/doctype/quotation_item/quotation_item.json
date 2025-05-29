@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "item_code_data",
   "item_code",
   "customer_item_code",
   "col_break1",
@@ -90,10 +91,11 @@
    "fieldtype": "Link",
    "in_global_search": 1,
    "in_list_view": 1,
-   "label": "Item Code",
+   "label": "Item",
    "oldfieldname": "item_code",
    "oldfieldtype": "Link",
    "options": "Item",
+   "print_hide": 1,
    "print_width": "150px",
    "search_index": 1,
    "width": "150px"
@@ -103,7 +105,6 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Customer's Item Code",
-   "print_hide": 1,
    "read_only": 1
   },
   {
@@ -113,13 +114,13 @@
   {
    "fieldname": "item_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_global_search": 1,
    "label": "Item Name",
    "oldfieldname": "item_name",
    "oldfieldtype": "Data",
    "print_hide": 1,
    "print_width": "150px",
-   "reqd": 1,
    "width": "150px"
   },
   {
@@ -190,6 +191,7 @@
    "fieldtype": "Link",
    "label": "UOM",
    "options": "UOM",
+   "print_hide": 1,
    "reqd": 1
   },
   {
@@ -287,7 +289,8 @@
    "fieldname": "discount_amount",
    "fieldtype": "Currency",
    "label": "Discount Amount",
-   "options": "currency"
+   "options": "currency",
+   "print_hide": 1
   },
   {
    "depends_on": "eval:doc.margin_type && doc.price_list_rate && doc.margin_rate_or_amount",
@@ -686,17 +689,26 @@
    "print_hide": 1,
    "read_only": 1,
    "report_hide": 1
+  },
+  {
+   "fetch_from": "item_code.item_code",
+   "fieldname": "item_code_data",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "read_only": 1
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-12-12 13:49:17.765883",
+ "modified": "2025-05-19 14:28:47.516273",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Quotation Item",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

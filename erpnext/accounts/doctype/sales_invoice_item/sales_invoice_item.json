@@ -299,8 +299,8 @@
   {
    "fieldname": "discount_amount",
    "fieldtype": "Currency",
-   "label": "Discount Amount",
-   "options": "currency"
+   "label": "Discount (Company Currency)",
+   "options": "Company:company:default_currency"
   },
   {
    "fieldname": "base_rate_with_margin",
@@ -957,7 +957,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-15 17:28:46.576132",
+ "modified": "2025-09-26 00:26:11.428519",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice Item",

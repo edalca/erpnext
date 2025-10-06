@@ -175,7 +175,7 @@ erpnext.sales_common = {
 				);
 			}
 
-			discount_amount(doc, cdt, cdn) {
+			discount_amount(doc, cdt, cdn) {;
 				if (doc.name === cdn) {
 					return;
 				}

@@ -17,7 +17,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 
 			frappe.model.round_floats_in(item, ["rate", "price_list_rate"]);
 			if (item.price_list_rate && !item.blanket_order_rate) {
-				if (item.rate > item.price_list_rate && has_margin_field) {
+				if (item.rate > item.price_list_rate ) {
 					// if rate is greater than price_list_rate, set margin
 					// or set discount
 					item.discount_percentage = 0;
@@ -25,6 +25,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 					item.margin_rate_or_amount = flt(item.rate - item.price_list_rate,
 						precision("margin_rate_or_amount", item));
 					item.rate_with_margin = item.rate;
+					item.discount_amount = 0;
 				} else {
 					item.discount_percentage = flt((1 - item.rate / item.price_list_rate) * 100.0,
 						precision("discount_percentage", item));
@@ -1131,6 +1132,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 		var item = frappe.get_doc(cdt, cdn);
 		if (item && !item.price_list_rate) {
 			item[field] = 0.0;
+	
 		} else {
 			this.price_list_rate(doc, cdt, cdn);
 		}
@@ -2189,7 +2191,6 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 
 		// Asegurarse de que hay precio de lista y no hay tarifa de orden en blanco
 		if (!item.price_list_rate || item.blanket_order_rate) return;
-
 		// Si el precio es mayor al estándar, no hay descuento
 		if (item.rate > item.price_list_rate) {
 			frappe.model.set_value(cdt, cdn, 'discount_percentage', 0);

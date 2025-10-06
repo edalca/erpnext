@@ -231,7 +231,8 @@ class calculate_taxes_and_totals:
 				self._set_in_company_currency(
 					item, ["price_list_rate", "rate", "net_rate", "amount", "net_amount"]
 				)
-
+				if item.discount_amount<0:
+					item.discount_amount=0
 				item.item_tax_amount = 0.0
 
 	def _set_in_company_currency(self, doc, fields):

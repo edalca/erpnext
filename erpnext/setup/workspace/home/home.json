@@ -278,7 +278,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Compa\u00f1\u00eda",
-   "link_count": 4,
+   "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -319,9 +319,19 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Sales Discount",
+   "label": "Descuento de Ventas",
    "link_count": 0,
    "link_to": "Sales Discount",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle",
+   "link_count": 0,
+   "link_to": "Vehicle",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -334,16 +344,6 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Punto de Venta",
-   "link_count": 0,
-   "link_to": "point-of-sale",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
   },
   {
    "hidden": 0,
@@ -378,15 +378,25 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Cash Outflow",
+   "label": "Egreso de Efectivo",
    "link_count": 0,
    "link_to": "Cash Outflow",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Maintenance ",
+   "link_count": 0,
+   "link_to": "Vehicle Maintenance",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-05-01 15:35:02.405562",
+ "modified": "2025-10-06 02:31:09.457221",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Home",

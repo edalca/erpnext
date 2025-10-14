@@ -14,38 +14,28 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 		frappe.ui.form.on(this.frm.doctype + " Item", "rate", function (frm, cdt, cdn) {
 			var item = frappe.get_doc(cdt, cdn);
 			var has_margin_field = frappe.meta.has_field(cdt, 'margin_type');
-
 			frappe.model.round_floats_in(item, ["rate", "price_list_rate"]);
 			if (item.price_list_rate && !item.blanket_order_rate) {
-				if (item.rate > item.price_list_rate ) {
+				if (item.rate < item.price_list_rate) {
 					// if rate is greater than price_list_rate, set margin
 					// or set discount
-					item.discount_percentage = 0;
 					item.margin_type = 'Amount';
-					item.margin_rate_or_amount = flt(item.rate - item.price_list_rate,
-						precision("margin_rate_or_amount", item));
-					item.rate_with_margin = item.rate;
-					item.discount_amount = 0;
-				} else {
-					item.discount_percentage = flt((1 - item.rate / item.price_list_rate) * 100.0,
-						precision("discount_percentage", item));
-					item.discount_amount = flt(item.price_list_rate) - flt(item.rate);
-					item.margin_type = '';
-					item.margin_rate_or_amount = 0;
-					item.rate_with_margin = 0;
-				}
+					item.rate = flt(item.price_list_rate,precision("rate", item));
+				} 
 			} else {
 				item.discount_percentage = 0.0;
 				item.margin_type = '';
 				item.margin_rate_or_amount = 0;
 				item.rate_with_margin = 0;
 			}
+			item.discount_percentage = 0.0;
+			item.discount_amount = 0.0;
 			item.base_rate_with_margin = item.rate_with_margin * flt(frm.doc.conversion_rate);
 
 			cur_frm.cscript.set_gross_profit(item);
 			cur_frm.cscript.calculate_taxes_and_totals();
 			cur_frm.cscript.calculate_stock_uom_rate(frm, cdt, cdn);
-			cur_frm.cscript.validate_user_discount_limit(frm, cdt, cdn);
+
 		});
 
 		frappe.ui.form.on(this.frm.cscript.tax_table, "rate", function (frm, cdt, cdn) {
@@ -686,11 +676,11 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 	price_list_rate(doc, cdt, cdn) {
 		var item = frappe.get_doc(cdt, cdn);
 		frappe.model.round_floats_in(item, ["price_list_rate", "discount_percentage"]);
-
 		// check if child doctype is Sales Order Item/Quotation Item and calculate the rate
 		if (in_list(["Quotation Item", "Sales Order Item", "Delivery Note Item", "Sales Invoice Item", "POS Invoice Item", "Purchase Invoice Item", "Purchase Order Item", "Purchase Receipt Item"]), cdt)
 			this.apply_pricing_rule_on_item(item);
 		else
+
 			item.rate = flt(item.price_list_rate * (1 - item.discount_percentage / 100.0),
 				precision("rate", item));
 
@@ -1132,7 +1122,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 		var item = frappe.get_doc(cdt, cdn);
 		if (item && !item.price_list_rate) {
 			item[field] = 0.0;
-	
+
 		} else {
 			this.price_list_rate(doc, cdt, cdn);
 		}
@@ -2184,49 +2174,6 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 			var rate = flt(item.rate) * flt(this.frm.doc.conversion_rate || 1);
 			item.gross_profit = flt(((rate - item.valuation_rate) * item.stock_qty), precision("amount", item));
 		}
-	}
-
-	validate_user_discount_limit(frm, cdt, cdn) {
-		const item = frappe.get_doc(cdt, cdn);
-
-		// Asegurarse de que hay precio de lista y no hay tarifa de orden en blanco
-		if (!item.price_list_rate || item.blanket_order_rate) return;
-		// Si el precio es mayor al estándar, no hay descuento
-		if (item.rate > item.price_list_rate) {
-			frappe.model.set_value(cdt, cdn, 'discount_percentage', 0);
-			frappe.model.set_value(cdt, cdn, 'discount_amount', 0);
-			return;
-		}
-
-		// Calcular el porcentaje de descuento actual
-		const discount_percentage = flt((1 - item.rate / item.price_list_rate) * 100.0,
-			precision("discount_percentage", item));
-
-		// Buscar el límite de descuento para el usuario actual
-		frappe.call({
-			method: "frappe.client.get_value",
-			args: {
-				doctype: "Sales Discount",
-				filters: { user: frappe.session.user },
-				fieldname: "discount"
-			},
-			callback: function (r) {
-				if (r.message) {
-					const max_allowed = flt(r.message.discount);
-
-					// Ajustar el descuento si excede el máximo permitido
-					const final_discount = discount_percentage > max_allowed ? max_allowed : discount_percentage;
-
-					// Calcular nuevo rate basado en el descuento permitido
-					const adjusted_rate = flt(item.price_list_rate * (1 - final_discount / 100),
-						precision("rate", item));
-
-					// Actualizar visualmente los campos
-					frappe.model.set_value(cdt, cdn, 'discount_percentage', final_discount);
-					frappe.model.set_value(cdt, cdn, 'rate', adjusted_rate);
-				}
-			}
-		});
 	}
 
 	setup_item_selector() {

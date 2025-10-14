@@ -73,7 +73,7 @@ class calculate_taxes_and_totals:
 
 	def _calculate(self):
 		self.validate_conversion_rate()
-		self.calculate_item_values()
+		# self.calculate_item_values()
 		self.validate_item_tax_template()
 		self.update_item_tax_map()
 		self.initialize_taxes()
@@ -224,7 +224,7 @@ class calculate_taxes_and_totals:
 				elif not item.qty and self.doc.get("is_debit_note"):
 					item.amount = flt(item.rate, item.precision("amount"))
 				else:
-					item.amount = flt(item.rate * item.qty, item.precision("amount"))
+					item.amount = flt(item.rate  * item.qty, item.precision("amount"))
 
 				item.net_amount = item.amount
 

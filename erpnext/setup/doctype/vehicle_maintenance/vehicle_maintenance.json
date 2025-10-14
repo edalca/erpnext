@@ -8,6 +8,7 @@
   "section_break_b9d2",
   "date",
   "customer",
+  "contact_number",
   "assigned_to",
   "amended_from",
   "column_break_hftj",
@@ -82,7 +83,7 @@
   },
   {
    "fieldname": "customer",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Customer",
    "options": "Customer",
    "reqd": 1
@@ -123,13 +124,18 @@
    "fieldtype": "Table",
    "mandatory_depends_on": "eval:doc.docstatus==0 && !doc.__islocal",
    "options": "Vehicle Maintenance Item"
+  },
+  {
+   "fieldname": "contact_number",
+   "fieldtype": "Data",
+   "label": "Contact Number"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-06 02:41:40.977096",
+ "modified": "2025-10-11 21:25:00.983509",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Vehicle Maintenance",

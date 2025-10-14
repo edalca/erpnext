@@ -17,7 +17,8 @@ class VehicleMaintenance(Document):
 
 		amended_from: DF.Link | None
 		assigned_to: DF.Data
-		customer: DF.Link
+		contact_number: DF.Data | None
+		customer: DF.Data
 		customer_comment: DF.SmallText
 		date: DF.Date
 		vehicle: DF.Link

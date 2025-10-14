@@ -262,11 +262,13 @@
    "label": "Discount and Margin"
   },
   {
+   "default": "Amount",
    "fieldname": "margin_type",
    "fieldtype": "Select",
    "label": "Margin Type",
    "options": "\nPercentage\nAmount",
-   "print_hide": 1
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "margin_rate_or_amount",
@@ -289,11 +291,13 @@
   {
    "fieldname": "discount_percentage",
    "fieldtype": "Percent",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Discount (%)",
    "oldfieldname": "adj_rate",
    "oldfieldtype": "Float",
-   "print_hide": 1
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "discount_amount",
@@ -947,7 +951,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-06 02:24:42.780925",
+ "modified": "2025-10-14 00:08:32.526843",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice Item",

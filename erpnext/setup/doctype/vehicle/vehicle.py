@@ -22,7 +22,7 @@ class Vehicle(Document):
 		color: DF.Data | None
 		fuel_type: DF.Literal["Petrol", "Diesel"]
 		license_plate: DF.Data | None
-		model: DF.Data
+		model: DF.Link
 		year: DF.Int
 	# end: auto-generated types
 

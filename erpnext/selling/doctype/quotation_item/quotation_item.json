@@ -277,11 +277,13 @@
    "depends_on": "price_list_rate",
    "fieldname": "discount_percentage",
    "fieldtype": "Percent",
+   "hidden": 1,
    "label": "Discount (%)",
    "oldfieldname": "adj_rate",
    "oldfieldtype": "Float",
    "print_hide": 1,
    "print_width": "100px",
+   "read_only": 1,
    "width": "100px"
   },
   {
@@ -694,7 +696,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-26 01:26:28.134275",
+ "modified": "2025-10-14 21:12:19.167550",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Quotation Item",

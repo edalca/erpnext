@@ -9,48 +9,55 @@ erpnext.taxes_and_totals = class TaxesAndTotals extends erpnext.payments {
 	apply_pricing_rule_on_item(item) {
 		let effective_item_rate = item.price_list_rate;
 		let item_rate = item.rate;
-		console.log("Item Rate before PR:", item);
 		this.calculate_max_discount_percentage(item);
-		if (["Sales Order", "Quotation"].includes(item.parenttype) && item.blanket_order_rate) {
-			effective_item_rate = item.blanket_order_rate;
-		}
-		if (item.margin_type == "Percentage") {
-			item.rate_with_margin = flt(effective_item_rate)
-				+ flt(effective_item_rate) * (flt(item.margin_rate_or_amount) / 100);
-		} else {
-			item.rate_with_margin = flt(effective_item_rate) + flt(item.margin_rate_or_amount);
-		}
-		item.base_rate_with_margin = flt(item.rate_with_margin) * flt(this.frm.doc.conversion_rate);
-
-		item_rate = flt(item.rate_with_margin, precision("rate", item));
-
-		if (item.discount_percentage && !item.discount_amount) {
-			item.discount_amount = flt(item.rate_with_margin) * flt(item.discount_percentage) / 100;
+		if (effective_item_rate > item_rate) {
+			item_rate = effective_item_rate;
 		}
 
 		if (item.discount_amount > 0) {
 			item.discount_percentage = flt(((1 - (item.rate - item.discount_amount) / item.rate) * 100.0),
 				precision("discount_percentage", item));
 		}
-
-		//frappe.model.set_value(item.doctype, item.name, "rate", item_rate);
+		console.log("item_rate", item_rate);
+		frappe.model.set_value(item.doctype, item.name, "rate", item_rate);
 	}
 
 	calculate_max_discount_percentage(item) {
 		// Buscar el límite de descuento para el usuario actual
+		let me = this;
 		frappe.call({
 			method: "frappe.client.get_value",
 			args: {
 				doctype: "Sales Discount",
-				filters: { user: frappe.session.user },
+				filters: { user: frappe.session.user, company: this.frm.doc.company },
 				fieldname: "discount"
 			},
 			callback: function (r) {
 				if (r.message) {
-					const max_discount = flt(item.price_list_rate)-flt(item.price_list_rate) * flt(r.message.discount) / 100;
-					console.log("Max Discount:", max_discount);
-					console.log("Item Discount Amount:", item);
+					const max_discount = flt(r.message.discount);
+					const base_price = flt(item.price_list_rate);
+					const min_rate = base_price - (base_price * (max_discount / 100));
+					const rate = flt(item.rate - item.discount_amount);
+					const entered_discount = flt(item.discount_amount);
+					const final_price = flt(item.rate - entered_discount);
 
+					if (rate < min_rate && entered_discount > 0 && item.rate > 0) {
+						item.discount_amount = 0;
+
+						frappe.msgprint(__(
+							"The base price of this product is {0}. The maximum allowed discount is {1} ({2}%). Therefore, the minimum final price must be {3}. The entered discount is {4}, and the final price after discount is {5}. Please ensure the final price is not lower than the allowed minimum.",
+							[
+								base_price,
+								base_price * (max_discount / 100),
+								max_discount,
+								min_rate,
+								entered_discount,
+								final_price
+							]
+						));
+
+						me.calculate_taxes_and_totals();
+					}
 				}
 			}
 		});
@@ -153,6 +160,9 @@ erpnext.taxes_and_totals = class TaxesAndTotals extends erpnext.payments {
 				item.net_rate = item.rate;
 				item.qty = item.qty === undefined ? (me.frm.doc.is_return ? -1 : 1) : item.qty;
 
+				if (item.rate <= 0 && item.discount_amount > 0) {
+					item.discount_amount = 0;
+				}
 				if (!(me.frm.doc.is_return || me.frm.doc.is_debit_note)) {
 					item.net_amount = item.amount = flt((item.rate - item.discount_amount) * item.qty, precision("amount", item));
 				}

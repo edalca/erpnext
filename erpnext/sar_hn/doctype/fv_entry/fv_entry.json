@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-15 01:13:09.651972",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "transaction_details_section",
+  "date_of_emission",
+  "transaction_date",
+  "column_break_zphe",
+  "voucher_type",
+  "voucher_no",
+  "section_break_ihqd",
+  "print_authorization",
+  "document_type",
+  "fiscal_number",
+  "column_break_szdu",
+  "cancellation_reason",
+  "is_cancelled"
+ ],
+ "fields": [
+  {
+   "fieldname": "voucher_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Voucher Type",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "voucher_no",
+   "fieldtype": "Dynamic Link",
+   "label": "Voucher No",
+   "options": "voucher_type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transaction_details_section",
+   "fieldtype": "Section Break",
+   "label": "Transaction Details"
+  },
+  {
+   "fieldname": "column_break_zphe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ihqd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Select",
+   "label": "Document Type",
+   "options": "01 - INVOICE\n02 - SALES RECEIPT\n03 - RENT RECEIPT\n04 - PROFESSIONAL FEES RECEIPT\n05 - WITHHOLDING CERTIFICATE\n06 - CREDIT NOTE\n07 - DEBIT NOTE\n08 - DELIVERY NOTE",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fiscal_number",
+   "fieldtype": "Data",
+   "label": "Fiscal Number"
+  },
+  {
+   "fieldname": "print_authorization",
+   "fieldtype": "Link",
+   "label": "Print Authorization",
+   "options": "Print Authorization"
+  },
+  {
+   "fieldname": "date_of_emission",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of Emission",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_cancelled",
+   "fieldtype": "Check",
+   "label": "Is Cancelled"
+  },
+  {
+   "fieldname": "transaction_date",
+   "fieldtype": "Date",
+   "label": "Transaction Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_szdu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cancellation_reason",
+   "fieldtype": "Small Text",
+   "label": "Cancellation Reason"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-15 03:00:01.245794",
+ "modified_by": "Administrator",
+ "module": "SAR HN",
+ "name": "FV Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

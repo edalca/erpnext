@@ -13,7 +13,6 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 		frappe.flags.hide_serial_batch_dialog = true;
 		frappe.ui.form.on(this.frm.doctype + " Item", "rate", function (frm, cdt, cdn) {
 			var item = frappe.get_doc(cdt, cdn);
-			var has_margin_field = frappe.meta.has_field(cdt, 'margin_type');
 			frappe.model.round_floats_in(item, ["rate", "price_list_rate"]);
 			if (item.price_list_rate && !item.blanket_order_rate) {
 				if (item.rate < item.price_list_rate) {

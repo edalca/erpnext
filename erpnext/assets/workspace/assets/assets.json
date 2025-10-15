@@ -198,7 +198,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-04-22 15:21:07.277769",
+ "modified": "2025-10-15 02:47:18.281674",
  "modified_by": "Administrator",
  "module": "Assets",
  "name": "Assets",
@@ -213,7 +213,7 @@
    "role": "Administrator"
   }
  ],
- "sequence_id": 7.0,
+ "sequence_id": 10.0,
  "shortcuts": [
   {
    "label": "Asset",

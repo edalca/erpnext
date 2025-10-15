@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "autoname": "field:series",
+ "creation": "2025-10-15 00:29:28.888164",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_3iyr",
+  "company",
+  "emission_point_name",
+  "series",
+  "column_break_vdkh",
+  "establishment",
+  "emission_mode",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_3iyr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "emission_mode",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Emission Mode",
+   "options": "M\u00e1quina Registradora\nSFC en Red Fijo\nSFC en Red M\u00f3vil\nSFC Independiente Fijo\nSFC Independiente M\u00f3vil",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vdkh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "emission_point_name",
+   "fieldtype": "Data",
+   "label": "Emission Point Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "series",
+   "fieldtype": "Data",
+   "label": "Emission Point Code",
+   "read_only_depends_on": "eval: !doc.__islocal",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive\nRevoked",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Emission Point",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "establishment",
+   "fieldtype": "Link",
+   "label": "Establishment",
+   "options": "Establishment",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-15 02:30:10.906162",
+ "modified_by": "Administrator",
+ "module": "SAR HN",
+ "name": "Emission Point",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "emission_point_name"
+}

@@ -1,0 +1,171 @@
+{
+ "actions": [],
+ "autoname": "field:cai",
+ "creation": "2025-10-15 00:12:38.437609",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_tuql",
+  "company",
+  "establishment",
+  "emission_point",
+  "column_break_xult",
+  "document_type",
+  "cai",
+  "status",
+  "amended_from",
+  "section_break_izes",
+  "request_date",
+  "authorized_range_start",
+  "quantity",
+  "column_break_wqiq",
+  "expiration_date",
+  "authorized_range_end",
+  "series"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_tuql",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "emission_point",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Emission Point",
+   "options": "Emission Point",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Print Authorization",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_xult",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Document Type",
+   "options": "01 - INVOICE\n02 - SALES RECEIPT\n03 - RENT RECEIPT\n04 - PROFESSIONAL FEES RECEIPT\n05 - WITHHOLDING CERTIFICATE\n06 - CREDIT NOTE\n07 - DEBIT NOTE\n08 - DELIVERY NOTE",
+   "reqd": 1
+  },
+  {
+   "fieldname": "series",
+   "fieldtype": "Data",
+   "label": "Authorized Range",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cai",
+   "fieldtype": "Data",
+   "label": "CAI",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "request_date",
+   "fieldtype": "Date",
+   "label": "Request Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expiration_date",
+   "fieldtype": "Date",
+   "label": "Expiration Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_wqiq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "authorized_range_start",
+   "fieldtype": "Int",
+   "label": "Authorized Range Start",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "authorized_range_end",
+   "fieldtype": "Int",
+   "label": "Authorized Range End",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_izes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "establishment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Establishment",
+   "options": "Establishment",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nActive\nExpired\nExhausted\nRevoked",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-15 02:59:41.422937",
+ "modified_by": "Administrator",
+ "module": "SAR HN",
+ "name": "Print Authorization",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "series"
+}

@@ -17,6 +17,8 @@ class FVEntry(Document):
 		cancellation_reason: DF.SmallText | None
 		date_of_emission: DF.Date
 		document_type: DF.Literal["01 - INVOICE", "02 - SALES RECEIPT", "03 - RENT RECEIPT", "04 - PROFESSIONAL FEES RECEIPT", "05 - WITHHOLDING CERTIFICATE", "06 - CREDIT NOTE", "07 - DEBIT NOTE", "08 - DELIVERY NOTE"]
+		emission_point: DF.Data | None
+		establishment: DF.Data | None
 		fiscal_number: DF.Data | None
 		is_cancelled: DF.Check
 		print_authorization: DF.Link | None

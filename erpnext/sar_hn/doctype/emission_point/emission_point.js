@@ -11,4 +11,11 @@ frappe.ui.form.on("Emission Point", {
             };
         });
     },
+    refresh(frm) {
+        if (frm.is_new()) {
+            // Apply input mask to 'series' field (e.g., 000, 001)
+            const series = frm.fields_dict["series"].input;
+            Inputmask('999').mask(series);
+        }
+    }
 });

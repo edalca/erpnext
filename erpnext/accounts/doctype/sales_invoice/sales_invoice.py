@@ -77,6 +77,7 @@ class SalesInvoice(SellingController):
 		amended_from: DF.Link | None
 		amount_eligible_for_commission: DF.Currency
 		apply_discount_on: DF.Literal["", "Grand Total", "Net Total"]
+		authorized_range: DF.Data | None
 		auto_repeat: DF.Link | None
 		base_change_amount: DF.Currency
 		base_discount_amount: DF.Currency
@@ -89,6 +90,7 @@ class SalesInvoice(SellingController):
 		base_total: DF.Currency
 		base_total_taxes_and_charges: DF.Currency
 		base_write_off_amount: DF.Currency
+		cai: DF.Data | None
 		campaign: DF.Link | None
 		cash_bank_account: DF.Link | None
 		change_amount: DF.Currency
@@ -103,12 +105,13 @@ class SalesInvoice(SellingController):
 		contact_mobile: DF.SmallText | None
 		contact_person: DF.Link | None
 		conversion_rate: DF.Float
+		correlative: DF.Data | None
 		cost_center: DF.Link | None
 		currency: DF.Link
 		customer: DF.Link | None
 		customer_address: DF.Link | None
 		customer_group: DF.Link | None
-		customer_name: DF.SmallText | None
+		customer_name: DF.Data | None
 		debit_to: DF.Link | None
 		disable_rounded_total: DF.Check
 		discount_amount: DF.Currency
@@ -131,6 +134,7 @@ class SalesInvoice(SellingController):
 		is_opening: DF.Literal["No", "Yes"]
 		is_pos: DF.Check
 		is_return: DF.Check
+		issue_deadline: DF.Date | None
 		items: DF.Table[SalesInvoiceItem]
 		language: DF.Data | None
 		letter_head: DF.Link | None
@@ -160,6 +164,7 @@ class SalesInvoice(SellingController):
 		price_list_currency: DF.Link
 		pricing_rules: DF.Table[PricingRuleDetail]
 		project: DF.Link | None
+		reception_date: DF.Date | None
 		redeem_loyalty_points: DF.Check
 		remarks: DF.SmallText | None
 		represents_company: DF.Link | None
@@ -173,7 +178,7 @@ class SalesInvoice(SellingController):
 		selling_price_list: DF.Link
 		set_posting_time: DF.Check
 		set_target_warehouse: DF.Link | None
-		set_warehouse: DF.Link
+		set_warehouse: DF.Link | None
 		shipping_address: DF.SmallText | None
 		shipping_address_name: DF.Link | None
 		shipping_rule: DF.Link | None
@@ -379,7 +384,7 @@ class SalesInvoice(SellingController):
 		self.add_remarks()
 
 	def on_submit(self):
-		self.validate_pos_paid_amount()
+		#self.validate_pos_paid_amount()
 
 		if not self.auto_repeat:
 			frappe.get_doc("Authorization Control").validate_approving_authority(

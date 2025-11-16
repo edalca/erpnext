@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_rename": 1,
  "creation": "2025-10-15 01:13:09.651972",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,6 +11,8 @@
   "voucher_type",
   "voucher_no",
   "section_break_ihqd",
+  "establishment",
+  "emission_point",
   "print_authorization",
   "document_type",
   "fiscal_number",
@@ -26,6 +27,7 @@
    "in_list_view": 1,
    "label": "Voucher Type",
    "options": "DocType",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -33,6 +35,7 @@
    "fieldtype": "Dynamic Link",
    "label": "Voucher No",
    "options": "voucher_type",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -53,36 +56,41 @@
    "fieldtype": "Select",
    "label": "Document Type",
    "options": "01 - INVOICE\n02 - SALES RECEIPT\n03 - RENT RECEIPT\n04 - PROFESSIONAL FEES RECEIPT\n05 - WITHHOLDING CERTIFICATE\n06 - CREDIT NOTE\n07 - DEBIT NOTE\n08 - DELIVERY NOTE",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "fiscal_number",
    "fieldtype": "Data",
-   "label": "Fiscal Number"
+   "label": "Correlative",
+   "read_only": 1
   },
   {
    "fieldname": "print_authorization",
    "fieldtype": "Link",
-   "label": "Print Authorization",
-   "options": "Print Authorization"
+   "label": "CAI",
+   "options": "Print Authorization",
+   "read_only": 1
   },
   {
    "fieldname": "date_of_emission",
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date of Emission",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "default": "0",
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
-   "label": "Is Cancelled"
+   "label": "Is Cancelled",
+   "read_only": 1
   },
   {
    "fieldname": "transaction_date",
    "fieldtype": "Date",
    "label": "Transaction Date",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -92,29 +100,41 @@
   {
    "fieldname": "cancellation_reason",
    "fieldtype": "Small Text",
-   "label": "Cancellation Reason"
+   "label": "Cancellation Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "emission_point",
+   "fieldtype": "Data",
+   "label": "Emission Point",
+   "read_only": 1
+  },
+  {
+   "fieldname": "establishment",
+   "fieldtype": "Data",
+   "label": "Establishment",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
+ "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-15 03:00:01.245794",
+ "modified": "2025-10-16 02:15:50.748570",
  "modified_by": "Administrator",
  "module": "SAR HN",
  "name": "FV Entry",
  "owner": "Administrator",
  "permissions": [
   {
-   "create": 1,
    "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
+   "role": "Administrator",
+   "share": 1
   }
  ],
  "row_format": "Dynamic",

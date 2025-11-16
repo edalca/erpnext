@@ -31,6 +31,7 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
@@ -38,7 +39,6 @@
   {
    "fieldname": "emission_point",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Emission Point",
    "options": "Emission Point",
    "reqd": 1
@@ -87,6 +87,7 @@
   {
    "fieldname": "expiration_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Expiration Date",
    "reqd": 1
   },
@@ -123,7 +124,6 @@
   {
    "fieldname": "establishment",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Establishment",
    "options": "Establishment",
    "reqd": 1
@@ -141,7 +141,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-15 02:59:41.422937",
+ "modified": "2025-10-16 01:07:11.878319",
  "modified_by": "Administrator",
  "module": "SAR HN",
  "name": "Print Authorization",
@@ -163,9 +163,8 @@
   }
  ],
  "row_format": "Dynamic",
- "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "series"
+ "title_field": "company"
 }

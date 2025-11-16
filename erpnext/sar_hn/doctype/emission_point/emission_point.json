@@ -1,17 +1,16 @@
 {
  "actions": [],
- "autoname": "field:series",
  "creation": "2025-10-15 00:29:28.888164",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_3iyr",
   "company",
-  "emission_point_name",
-  "series",
-  "column_break_vdkh",
   "establishment",
+  "emission_point_name",
+  "column_break_vdkh",
   "emission_mode",
+  "series",
   "status",
   "amended_from"
  ],
@@ -41,19 +40,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "emission_point_name",
-   "fieldtype": "Data",
-   "label": "Emission Point Name",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
    "fieldname": "series",
    "fieldtype": "Data",
    "label": "Emission Point Code",
    "read_only_depends_on": "eval: !doc.__islocal",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "default": "Active",
@@ -79,17 +70,23 @@
    "label": "Establishment",
    "options": "Establishment",
    "reqd": 1
+  },
+  {
+   "fieldname": "emission_point_name",
+   "fieldtype": "Data",
+   "label": "Emission Point Name",
+   "read_only": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-15 02:30:10.906162",
+ "modified": "2025-10-15 23:39:47.548286",
  "modified_by": "Administrator",
  "module": "SAR HN",
  "name": "Emission Point",
- "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

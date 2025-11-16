@@ -3,7 +3,7 @@
 
 
 from frappe.model.document import Document
-
+from frappe.contacts.address_and_contact import load_address_and_contact
 
 class Branch(Document):
 	# begin: auto-generated types
@@ -14,7 +14,10 @@ class Branch(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		abbr: DF.Data | None
 		branch: DF.Data
+		company: DF.Link
 	# end: auto-generated types
 
-	pass
+	def onload(self):
+		load_address_and_contact(self, "branch")

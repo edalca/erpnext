@@ -13,7 +13,8 @@ frappe.ui.form.on("Print Authorization", {
         frm.set_query("emission_point", function (doc) {
             return {
                 filters: [
-                    ['establishment', "=", doc.establishment]
+                    ['establishment', "=", doc.establishment],
+                    ["docstatus", "=", 1]
                 ]
             };
         });

@@ -21,6 +21,7 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 			"Invoice Discounting": this.make_invoice_discounting.bind(this),
 		};
 
+
 	}
 	company() {
 		super.company();
@@ -58,6 +59,7 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 			me.frm.refresh_fields();
 		}
 		erpnext.queries.setup_warehouse_query(this.frm);
+
 	}
 
 	refresh(doc, dt, dn) {
@@ -86,7 +88,61 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 			this.frm.add_custom_button(__("Payment"), () => this.make_payment_entry(), __("Create"));
 			this.frm.page.set_inner_btn_group_as_primary(__("Create"));
 		}
+		if (doc.docstatus == 1 && !doc.correlative) {
+			cur_frm.add_custom_button(__("Create SAR Invoice"), function () {
+				frappe.call({
+					method: "frappe.client.get_list",
+					args: {
+						doctype: "Emission Point",
+						fields: ["name", "emission_point_name"],
+						filters: {
+							company: cur_frm.doc.company,
+							status: "Active"
+						},
+						limit_page_length: 100
+					},
+					callback: function (r) {
+						if (!r.exc && r.message.length) {
+							const dialog = new frappe.ui.Dialog({
+								title: __("Select Emission Point"),
+								fields: [
+									{
+										label: __("Emission Point"),
+										fieldname: "emission_point",
+										fieldtype: "Select",
+										options: r.message.map(pe => `${pe.name}`),
+										reqd: 1
+									}
+								],
+								primary_action_label: __("Create Fiscal Voucher"),
+								primary_action(values) {
+									const emission_point = values.emission_point;
+									frappe.call({
+										method: "erpnext.sar_hn.doctype.print_authorization.print_authorization.make_fv_entry",
+										args: {
+											sales_invoice: cur_frm.doc.name,
+											emission_point: emission_point
+										},
+										callback: function (res) {
+											if (!res.exc) {
+												frappe.msgprint(__("Fiscal Voucher created successfully."));
+												cur_frm.reload_doc();
+											}
+										}
+									});
 
+									dialog.hide();
+								}
+							});
+
+							dialog.show();
+						} else {
+							frappe.msgprint(__("No active emission points available for this company."));
+						}
+					}
+				});
+			}, __("Create"));
+		}
 		if (doc.docstatus == 1 && !doc.is_return) {
 			var is_delivered_by_supplier = false;
 
@@ -692,13 +748,6 @@ frappe.ui.form.on("Sales Invoice", {
 			};
 		});
 
-		frm.set_query("customer",function(){
-			return {
-				filters:{
-					company:frm.doc.company
-				}
-			}
-		});
 
 		(frm.custom_make_buttons = {
 			"Delivery Note": "Delivery",
@@ -771,6 +820,7 @@ frappe.ui.form.on("Sales Invoice", {
 
 	onload: function (frm) {
 		frm.redemption_conversion_factor = null;
+
 	},
 
 	update_stock: function (frm, dt, dn) {
@@ -941,7 +991,10 @@ frappe.ui.form.on("Sales Invoice", {
 			frm.doc.timesheets.reduce((a, b) => a + (b["billing_hours"] || 0.0), 0.0)
 		);
 	},
-	customer: function(frm){
+	customer: function (frm) {
+		frappe.db.get_value("Customer", frm.doc.customer, "customer_name", function (value) {
+			frm.set_value("customer_name", value.customer_name);
+		});
 		get_credit_limit_customer(frm)
 	},
 	payment_method: function (frm) {
@@ -1024,89 +1077,89 @@ var set_timesheet_detail_rate = function (cdt, cdn, currency, timelog) {
 };
 
 var get_credit_limit_customer = function (frm) {
-    // Verifica si el documento ya está validado
-    if (frm.doc.docstatus === 1) {
-        return;
-    }
+	// Verifica si el documento ya está validado
+	if (frm.doc.docstatus === 1) {
+		return;
+	}
 	if (!frm.doc.customer) {
-        frappe.msgprint({
-            title: __("Customer Missing"),
-            indicator: "red",
-            message: __("Please select a customer before proceeding.")
-        });
-        return;
-    }
-    if (frm.doc.payment_method === "Cash Payment") {
-        // Fecha actual formateada
-        let currentDate = frappe.datetime.nowdate(); // Retorna la fecha en formato 'YYYY-MM-DD'
-        frm.set_value("due_date", currentDate);
-    } else if (frm.doc.payment_method === "Credit Payment") {
-        frm.call({
-            method: "erpnext.selling.doctype.customer.customer.check_customer_credit_info",
-            args: {
-                customer: frm.doc.customer,
-                company: frm.doc.company,
-            },
-            callback: function (r) {
-                if (r && r.message) {
-                    // Accede a los valores retornados
-                    let credit_limit = r.message.credit_limit || 0; // Valor predeterminado
-                    let credit_days = r.message.days || 0; // Días de crédito predeterminado
+		frappe.msgprint({
+			title: __("Customer Missing"),
+			indicator: "red",
+			message: __("Please select a customer before proceeding.")
+		});
+		return;
+	}
+	if (frm.doc.payment_method === "Cash Payment") {
+		// Fecha actual formateada
+		let currentDate = frappe.datetime.nowdate(); // Retorna la fecha en formato 'YYYY-MM-DD'
+		frm.set_value("due_date", currentDate);
+	} else if (frm.doc.payment_method === "Credit Payment") {
+		frm.call({
+			method: "erpnext.selling.doctype.customer.customer.check_customer_credit_info",
+			args: {
+				customer: frm.doc.customer,
+				company: frm.doc.company,
+			},
+			callback: function (r) {
+				if (r && r.message) {
+					// Accede a los valores retornados
+					let credit_limit = r.message.credit_limit || 0; // Valor predeterminado
+					let credit_days = r.message.days || 0; // Días de crédito predeterminado
 
-                    if (credit_limit === 0) {
-                        // Muestra un mensaje si el cliente no tiene crédito
-                        frappe.msgprint({
-                            title: __("Credit Information"),
-                            indicator: "red",
-                            message: __("This customer does not have any credit assigned. Switching to Cash Payment"),
-                        });
-                        // Cambia el método de pago a "Cash Payment"
-                        frm.set_value("payment_method", "Cash Payment");
-                        // Configura la fecha de vencimiento como hoy
-                        let currentDate = frappe.datetime.nowdate();
-                        frm.set_value("due_date", currentDate);
-                        frm.set_value("is_pos",1)
-                    } else {
-                        // Si tiene crédito, calcula la fecha de vencimiento
-                        let currentDate = frappe.datetime.nowdate();
-                        let dueDate = frappe.datetime.add_days(currentDate, credit_days);
-                        frm.set_value("due_date", dueDate);
-                        frm.set_value("is_pos",0)
+					if (credit_limit === 0) {
+						// Muestra un mensaje si el cliente no tiene crédito
+						frappe.msgprint({
+							title: __("Credit Information"),
+							indicator: "red",
+							message: __("This customer does not have any credit assigned. Switching to Cash Payment"),
+						});
+						// Cambia el método de pago a "Cash Payment"
+						frm.set_value("payment_method", "Cash Payment");
+						// Configura la fecha de vencimiento como hoy
+						let currentDate = frappe.datetime.nowdate();
+						frm.set_value("due_date", currentDate);
+						frm.set_value("is_pos", 1)
+					} else {
+						// Si tiene crédito, calcula la fecha de vencimiento
+						let currentDate = frappe.datetime.nowdate();
+						let dueDate = frappe.datetime.add_days(currentDate, credit_days);
+						frm.set_value("due_date", dueDate);
+						frm.set_value("is_pos", 0)
 
-                    }
-                } else {
-                    // Maneja el caso en el que no haya respuesta o esté vacía
-                    frappe.msgprint({
-                        title: __("Error"),
-                        indicator: "orange",
-                        message: __("Unable to fetch credit information for the customer."),
-                    });
-                }
-            },
-        });
-    }
+					}
+				} else {
+					// Maneja el caso en el que no haya respuesta o esté vacía
+					frappe.msgprint({
+						title: __("Error"),
+						indicator: "orange",
+						message: __("Unable to fetch credit information for the customer."),
+					});
+				}
+			},
+		});
+	}
 };
 
 var warehouses_permission = function (frm) {
-    frappe.call({
-        method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.get_user_warehouses", // Cambia por la ruta correcta de tu método
-        callback: function (r) {
-            if (r && r.message && r.message.length > 0) {
-                // Extrae los almacenes de los resultados
-                let warehouses = r.message.map(profile => profile.warehouse);
+	frappe.call({
+		method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.get_user_warehouses", // Cambia por la ruta correcta de tu método
+		callback: function (r) {
+			if (r && r.message && r.message.length > 0) {
+				// Extrae los almacenes de los resultados
+				let warehouses = r.message.map(profile => profile.warehouse);
 				erpnext.queries.setup_queries(frm, "Warehouse", function () {
 					return {
 						filters: [
 							["Warehouse", "company", "in", ["", cstr(frm.doc.company)]],
 							["Warehouse", "is_group", "=", 0],
-							["Warehouse","name","in",warehouses]
+							["Warehouse", "name", "in", warehouses]
 						],
 					};
 				});
 
-            }
-        }
-    });
+			}
+		}
+	});
 };
 
 

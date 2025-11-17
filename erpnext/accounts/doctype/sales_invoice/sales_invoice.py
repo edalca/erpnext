@@ -118,6 +118,8 @@ class SalesInvoice(SellingController):
 		dispatch_address: DF.SmallText | None
 		dispatch_address_name: DF.Link | None
 		due_date: DF.Date | None
+		exempt_purchase_order: DF.Data | None
+		exonerated_reg_certificate: DF.Data | None
 		from_date: DF.Date | None
 		grand_total: DF.Currency
 		group_same_items: DF.Check
@@ -145,7 +147,7 @@ class SalesInvoice(SellingController):
 		loyalty_redemption_cost_center: DF.Link | None
 		named_place: DF.Data | None
 		net_total: DF.Currency
-		observation: DF.SmallText | None
+		observations: DF.SmallText | None
 		only_include_allocated_payments: DF.Check
 		other_charges_calculation: DF.TextEditor | None
 		outstanding_amount: DF.Currency
@@ -172,6 +174,7 @@ class SalesInvoice(SellingController):
 		return_against: DF.Link | None
 		rounded_total: DF.Currency
 		rounding_adjustment: DF.Currency
+		sag_registration: DF.Data | None
 		sales_partner: DF.Link | None
 		sales_team: DF.Table[SalesTeam]
 		scan_barcode: DF.Data | None

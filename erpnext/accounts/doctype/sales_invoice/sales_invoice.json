@@ -44,12 +44,20 @@
   "plc_conversion_rate",
   "ignore_pricing_rule",
   "fiscal_information_section",
+  "column_break_wkni",
+  "reception_date",
+  "correlative",
+  "column_break_ugrd",
   "cai",
   "issue_deadline",
-  "reception_date",
-  "column_break_ugrd",
+  "column_break_piae",
   "authorized_range",
-  "correlative",
+  "exempt_purchaser_data_section",
+  "exempt_purchase_order",
+  "column_break_syrh",
+  "exonerated_reg_certificate",
+  "column_break_scub",
+  "sag_registration",
   "items_section",
   "scan_barcode",
   "update_stock",
@@ -96,7 +104,7 @@
   "outstanding_amount",
   "disable_rounded_total",
   "section_break_rrmg",
-  "observation",
+  "observations",
   "section_break_49",
   "apply_discount_on",
   "base_discount_amount",
@@ -2189,7 +2197,43 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "observation",
+   "fieldname": "column_break_wkni",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "exempt_purchase_order",
+   "fieldtype": "Data",
+   "label": "Exempt Purchase Order Number"
+  },
+  {
+   "fieldname": "exonerated_reg_certificate",
+   "fieldtype": "Data",
+   "label": "Exonerated Registration Certificate Number"
+  },
+  {
+   "fieldname": "sag_registration",
+   "fieldtype": "Data",
+   "label": "SAG Registration Number"
+  },
+  {
+   "fieldname": "exempt_purchaser_data_section",
+   "fieldtype": "Section Break",
+   "label": "Exempt Purchaser Data"
+  },
+  {
+   "fieldname": "column_break_syrh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_scub",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_piae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "observations",
    "fieldtype": "Small Text",
    "label": "Observations"
   }
@@ -2204,7 +2248,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-11-16 19:40:55.633211",
+ "modified": "2025-11-17 01:09:15.078025",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

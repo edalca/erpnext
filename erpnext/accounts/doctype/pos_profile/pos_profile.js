@@ -1,10 +1,27 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 frappe.ui.form.on("POS Profile", {
+	onload: function (frm) {
+		frm.set_query("establishment", function (doc) {
+			return {
+				filters: [
+					['company', "=", doc.company]
+				]
+			};
+		});
+	   frm.set_query("emission_point", function (doc) {
+            return {
+                filters: [
+                    ['establishment', "=", doc.establishment]
+                ]
+            };
+        });
+	},
 	setup: function (frm) {
 		frm.set_query("selling_price_list", function () {
 			return { filters: { selling: 1 } };
 		});
+
 
 		frm.set_query("tc_name", function () {
 			return { filters: { selling: 1 } };

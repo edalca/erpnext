@@ -15,12 +15,11 @@ class POSProfile(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
 		from erpnext.accounts.doctype.pos_customer_group.pos_customer_group import POSCustomerGroup
 		from erpnext.accounts.doctype.pos_item_group.pos_item_group import POSItemGroup
 		from erpnext.accounts.doctype.pos_payment_method.pos_payment_method import POSPaymentMethod
 		from erpnext.accounts.doctype.pos_profile_user.pos_profile_user import POSProfileUser
+		from frappe.types import DF
 
 		account_for_change_amount: DF.Link | None
 		allow_discount_change: DF.Check
@@ -38,6 +37,8 @@ class POSProfile(Document):
 		customer_groups: DF.Table[POSCustomerGroup]
 		disable_rounded_total: DF.Check
 		disabled: DF.Check
+		emission_point: DF.Link | None
+		establishment: DF.Link | None
 		expense_account: DF.Link | None
 		hide_images: DF.Check
 		hide_unavailable_items: DF.Check

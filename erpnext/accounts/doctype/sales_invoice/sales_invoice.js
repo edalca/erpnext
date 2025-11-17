@@ -91,53 +91,31 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 		if (doc.docstatus == 1 && !doc.correlative) {
 			cur_frm.add_custom_button(__("Create SAR Invoice"), function () {
 				frappe.call({
-					method: "frappe.client.get_list",
+					method: "frappe.client.get_value",
 					args: {
-						doctype: "Emission Point",
-						fields: ["name", "emission_point_name"],
-						filters: {
-							company: cur_frm.doc.company,
-							status: "Active"
-						},
-						limit_page_length: 100
+						doctype: "POS Profile",
+						filters: { name: cur_frm.doc.pos_profile },
+						fieldname: ["emission_point"]
 					},
 					callback: function (r) {
-						if (!r.exc && r.message.length) {
-							const dialog = new frappe.ui.Dialog({
-								title: __("Select Emission Point"),
-								fields: [
-									{
-										label: __("Emission Point"),
-										fieldname: "emission_point",
-										fieldtype: "Select",
-										options: r.message.map(pe => `${pe.name}`),
-										reqd: 1
-									}
-								],
-								primary_action_label: __("Create Fiscal Voucher"),
-								primary_action(values) {
-									const emission_point = values.emission_point;
-									frappe.call({
-										method: "erpnext.sar_hn.doctype.print_authorization.print_authorization.make_fv_entry",
-										args: {
-											sales_invoice: cur_frm.doc.name,
-											emission_point: emission_point
-										},
-										callback: function (res) {
-											if (!res.exc) {
-												frappe.msgprint(__("Fiscal Voucher created successfully."));
-												cur_frm.reload_doc();
-											}
-										}
-									});
+						if (!r.exc && r.message && r.message.emission_point) {
+							const emission_point = r.message.emission_point;
 
-									dialog.hide();
+							frappe.call({
+								method: "erpnext.sar_hn.doctype.print_authorization.print_authorization.make_fv_entry",
+								args: {
+									sales_invoice: cur_frm.doc.name,
+									emission_point: emission_point
+								},
+								callback: function (res) {
+									if (!res.exc) {
+										frappe.msgprint(__("Fiscal Voucher created successfully."));
+										cur_frm.reload_doc();
+									}
 								}
 							});
-
-							dialog.show();
 						} else {
-							frappe.msgprint(__("No active emission points available for this company."));
+							frappe.msgprint(__("No emission point configured in the POS Profile."));
 						}
 					}
 				});

@@ -145,6 +145,7 @@ class SalesInvoice(SellingController):
 		loyalty_redemption_cost_center: DF.Link | None
 		named_place: DF.Data | None
 		net_total: DF.Currency
+		observation: DF.SmallText | None
 		only_include_allocated_payments: DF.Check
 		other_charges_calculation: DF.TextEditor | None
 		outstanding_amount: DF.Currency
@@ -158,7 +159,7 @@ class SalesInvoice(SellingController):
 		plc_conversion_rate: DF.Float
 		po_date: DF.Date | None
 		po_no: DF.Data | None
-		pos_profile: DF.Link | None
+		pos_profile: DF.Link
 		posting_date: DF.Date
 		posting_time: DF.Time | None
 		price_list_currency: DF.Link

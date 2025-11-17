@@ -95,6 +95,8 @@
   "total_advance",
   "outstanding_amount",
   "disable_rounded_total",
+  "section_break_rrmg",
+  "observation",
   "section_break_49",
   "apply_discount_on",
   "base_discount_amount",
@@ -296,12 +298,12 @@
    "depends_on": "is_pos",
    "fieldname": "pos_profile",
    "fieldtype": "Link",
-   "hidden": 1,
    "hide_days": 1,
    "hide_seconds": 1,
    "label": "POS Profile",
    "options": "POS Profile",
-   "print_hide": 1
+   "print_hide": 1,
+   "reqd": 1
   },
   {
    "default": "0",
@@ -736,6 +738,7 @@
   {
    "fieldname": "section_break_30",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "hide_days": 1,
    "hide_seconds": 1
   },
@@ -2180,6 +2183,15 @@
    "fieldtype": "Data",
    "label": "Correlative",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_rrmg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "observation",
+   "fieldtype": "Small Text",
+   "label": "Observations"
   }
  ],
  "icon": "fa fa-file-text",
@@ -2192,7 +2204,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-10-16 01:42:01.595202",
+ "modified": "2025-11-16 19:40:55.633211",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

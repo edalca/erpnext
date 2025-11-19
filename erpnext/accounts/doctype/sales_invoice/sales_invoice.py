@@ -7,7 +7,8 @@ from frappe import _, msgprint, throw
 from frappe.contacts.doctype.address.address import get_address_display
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.utils import get_fetch_values
-from frappe.utils import add_days, cint, cstr, flt, formatdate, get_link_to_form, getdate, nowdate
+from frappe.utils import add_days, cint, cstr, flt, formatdate, get_link_to_form, getdate, nowdate, today
+from collections import defaultdict
 
 import erpnext
 from erpnext.accounts.deferred_revenue import validate_service_stop_date
@@ -732,7 +733,7 @@ class SalesInvoice(SellingController):
 		if self.pos_profile:
 			pos = frappe.get_doc("POS Profile", self.pos_profile)
 
-		if not self.get("payments") and not for_validate:
+		if not self.get("payments") and not for_validate and pos:
 			update_multi_mode_option(self, pos)
 
 		if pos:
@@ -2504,15 +2505,27 @@ def update_address(doc, address_field, address_display_field, address_name):
 	doc.set(address_display_field, get_address_display(doc.get(address_field)))
 
 @frappe.whitelist()
-def get_user_warehouses():
-    user = frappe.session.user
-    pos_profiles = frappe.get_all(
-        "POS Profile",
-        filters={"disabled": 0},  # Solo perfiles POS activos
-        fields=["name", "warehouse"],
-        or_filters=[["POS Profile User", "user", "=", user]]  # Busca al usuario en la tabla secundaria
+def get_user_warehouses(pos_profile=None):
+    if not pos_profile:
+        return []
+
+    # Traer el almacén padre configurado en el POS Profile
+    warehouse = frappe.get_value("POS Profile", pos_profile, "warehouse")
+    if not warehouse:
+        return []
+
+    # Buscar todos los almacenes descendientes que no sean grupo
+    warehouses = frappe.get_all(
+        "Warehouse",
+        filters={
+            "lft": [">", frappe.get_value("Warehouse", warehouse, "lft")],
+            "rgt": ["<", frappe.get_value("Warehouse", warehouse, "rgt")],
+            "is_group": 0
+        },
+        fields=["name", "company"]
     )
-    return pos_profiles
+
+    return warehouses
 
 
 @frappe.whitelist()
@@ -2532,6 +2545,30 @@ def get_loyalty_programs(customer):
 	else:
 		return lp_details
 
+@frappe.whitelist()
+def get_cash_sales_by_cc():
+    summary = defaultdict(float)
+    current_user = frappe.session.user
+    invoices = frappe.get_all("Sales Invoice",
+        filters={
+            "docstatus": 1,
+            "posting_date": today(),
+            "is_pos": 1,
+			"owner": current_user 
+        },
+        fields=["name"]
+    )
+
+    for invoice in invoices:
+        items = frappe.get_all("Sales Invoice Item",
+            filters={"parent": invoice.name},
+            fields=["cost_center", "amount"]
+        )
+        for item in items:
+            cc = item.cost_center or "No Cost Center"
+            summary[cc] += item.amount
+
+    return [{"cost_center": cc, "total": total} for cc, total in summary.items()]
 
 @frappe.whitelist()
 def create_invoice_discounting(source_name, target_doc=None):

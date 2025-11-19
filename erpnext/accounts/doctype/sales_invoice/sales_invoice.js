@@ -496,7 +496,6 @@ erpnext.accounts.SalesInvoiceController = class SalesInvoiceController extends (
 		if (this.frm.doc.is_pos) {
 			this.frm.set_value("allocate_advances_automatically", 0);
 			if (!this.frm.doc.company) {
-				this.frm.set_value("is_pos", 0);
 				frappe.msgprint(__("Please specify Company to proceed"));
 			} else {
 				var me = this;
@@ -1119,26 +1118,28 @@ var get_credit_limit_customer = function (frm) {
 };
 
 var warehouses_permission = function (frm) {
-	frappe.call({
-		method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.get_user_warehouses", // Cambia por la ruta correcta de tu método
-		callback: function (r) {
-			if (r && r.message && r.message.length > 0) {
-				// Extrae los almacenes de los resultados
-				let warehouses = r.message.map(profile => profile.warehouse);
-				erpnext.queries.setup_queries(frm, "Warehouse", function () {
-					return {
-						filters: [
-							["Warehouse", "company", "in", ["", cstr(frm.doc.company)]],
-							["Warehouse", "is_group", "=", 0],
-							["Warehouse", "name", "in", warehouses]
-						],
-					};
-				});
+    frappe.call({
+        method: "erpnext.accounts.doctype.sales_invoice.sales_invoice.get_user_warehouses",
+        args: { pos_profile: frm.doc.pos_profile },  // mandas el POS Profile seleccionado
+        callback: function (r) {
+            if (r && r.message && r.message.length > 0) {
+                // Extrae directamente los nombres de los almacenes
+                let warehouses = r.message.map(w => w.name);
 
-			}
-		}
-	});
+                erpnext.queries.setup_queries(frm, "Warehouse", function () {
+                    return {
+                        filters: [
+                            ["Warehouse", "company", "=", cstr(frm.doc.company)],
+                            ["Warehouse", "is_group", "=", 0],
+                            ["Warehouse", "name", "in", warehouses]
+                        ],
+                    };
+                });
+            }
+        }
+    });
 };
+
 
 
 

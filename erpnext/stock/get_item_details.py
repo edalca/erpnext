@@ -1230,15 +1230,6 @@ def get_pos_profile(company, pos_profile=None, user=None):
 
 	pos_profile = query.run(as_dict=True)
 
-	if not pos_profile and company:
-		pos_profile = (
-			frappe.qb.from_(pf)
-			.left_join(pfu)
-			.on(pf.name == pfu.parent)
-			.select(pf.star)
-			.where((pf.company == company) & (pf.disabled == 0))
-		).run(as_dict=True)
-
 	return pos_profile and pos_profile[0] or None
 
 

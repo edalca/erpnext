@@ -15,6 +15,7 @@ erpnext.sales_common = {
 			onload() {
 				super.onload();
 				this.setup_queries();
+				//this.add_row_dialog();
 				this.frm.set_query("shipping_rule", function (doc) {
 					return {
 						filters: {
@@ -34,7 +35,6 @@ erpnext.sales_common = {
 					};
 				});
 			}
-
 			setup_queries() {
 				var me = this;
 
@@ -97,6 +97,217 @@ erpnext.sales_common = {
 					});
 				}
 			}
+			add_row_dialog = () => {
+				const me = this
+				const frm = this.frm
+				if (frm.is_new()) {
+					// Vaciar la tabla de items
+					frm.clear_table("items");
+					frm.refresh_field("items");
+				}
+				if (["Sales Invoice", "Quotation"].includes(frm.doctype)) {
+					let grid = frm.fields_dict['items'].grid;
+					let original_add_row = grid.add_new_row;
+					grid.add_new_row = function () {
+						// 👉 Abrir tu diálogo directamente
+						const row = {}; // fila temporal (no creada aún)
+
+						// Aquí llamas tu función personalizada
+						me.open_product_dialog(me.frm, null, row, function (selected_item) {
+							// Cuando el usuario selecciona un producto en el diálogo:
+							let new_row = original_add_row.call(grid);
+
+							frappe.model.set_value(new_row.doctype, new_row.name, "item_code", selected_item.item_code);
+							frappe.model.set_value(new_row.doctype, new_row.name, "item_name", selected_item.item_name);
+							frappe.model.set_value(new_row.doctype, new_row.name, "warehouse", selected_item.warehouse);
+							frappe.model.set_value(new_row.doctype, new_row.name, "qty", selected_item.qty);
+							frappe.model.set_value(new_row.doctype, new_row.name, "rate", selected_item.rate);
+						});
+					};
+				}
+			}
+			open_product_dialog = (frm, item_code, row) => {
+
+				// Crear el diálogo
+				const d = new frappe.ui.Dialog({
+					title: "Detalle de Producto",
+					size: "extra-large",
+					fields: [
+						{
+							fieldname: "item_code",
+							fieldtype: "Link",
+							label: __("Item Code"),
+							options: "Item",
+						},
+						{
+							fieldname: "column_break_0",
+							fieldtype: "Column Break"
+						},
+						{
+							fieldname: "item_name",
+							fieldtype: "Data",
+							label: __("Item Name"),
+							fetch_from: "item_code.item_name",
+							read_only: 1
+						},
+						{
+							fieldname: "column_break_1",
+							fieldtype: "Column Break"
+						},
+						{
+							fieldname: "uom",
+							fieldtype: "Link",
+							label: __("UOM"),
+							options: "UOM",
+						},
+						{
+							fieldname: "section_html",
+							fieldtype: "Section Break"
+						},
+						{
+							fieldname: "qty",
+							fieldtype: "Int",
+							default: 0,
+							label: __("Quantity")
+						},
+						{
+							fieldname: "column_break_2",
+							fieldtype: "Column Break"
+						},
+						{
+							fieldname: "rate",
+							fieldtype: "Currency",
+							label: __("Rate"),
+							default: 0
+						},
+						{
+							fieldname: "column_break_3",
+							fieldtype: "Column Break"
+						},
+						{
+							fieldname: "amount",
+							fieldtype: "Currency",
+							label: __("Amount"),
+							read_only: 1,
+						},
+						{
+							fieldname: "section_html",
+							fieldtype: "Section Break"
+						},
+						{
+							fieldname: "warehouse_stock",
+							fieldtype: "Table",
+							read_only: true,
+							cannot_add_rows: true,
+							fields: [
+								{ fieldtype: "Data", fieldname: "warehouse", label: "Almacén", in_list_view: 1, read_only: 1 },
+								{ fieldtype: "Float", fieldname: "actual_qty", label: "Disponible", in_list_view: 1, read_only: 1 },
+							]
+						}
+					]
+				});
+
+				d.show();
+				d.fields_dict.item_code.df.onchange = () => {
+					let item = d.fields_dict
+					var update_stock = 0, show_batch_dialog = 0;
+					item.weight_per_unit = 0;
+					item.weight_uom = '';
+					item.conversion_factor = 0;
+				};
+				frappe.call({
+					method: "frappe.client.get_list",
+					args: {
+						doctype: "Bin",
+						filters: { item_code: item_code },
+						fields: ["warehouse", "actual_qty"]
+					},
+					callback(r) {
+						if (r.message) {
+							const table_data = r.message.map(stock_row => ({
+								warehouse: stock_row.warehouse,
+								actual_qty: stock_row.actual_qty,
+								qty: 1,
+								rate: 0
+							}));
+
+							// Generar HTML estilo "configurar columnas"
+							function generate_product_config_html(data) {
+								let html = `
+                        <div class="form-group">
+                            <div class="row mb-2">
+                                <div class="col-4"><b>Almacén</b></div>
+                                <div class="col-2 text-right"><b>Disponible</b></div>
+                                <div class="col-2 text-right"><b>Cantidad</b></div>
+                                <div class="col-2 text-right"><b>Precio</b></div>
+                                <div class="col-2 text-center"><b>Acción</b></div>
+                            </div>
+                            <div class="control-input-wrapper selected-fields">
+                    `;
+
+								data.forEach((row, idx) => {
+									html += `
+                            <div class="control-input flex align-center form-control fields_order sortable-handle sortable mb-1"
+                                style="display: block; margin-bottom: 5px; padding: 0 8px; height: auto;" data-idx="${idx}">
+                                <div class="row w-100">
+                                    <div class="col-4 d-flex align-items-center">${row.warehouse}</div>
+                                    <div class="col-2 d-flex align-items-center justify-content-end">
+                                        <input class="form-control input-xs text-right"
+                                            style="height: 24px; max-width: 80px; background: var(--bg-color);"
+                                            value="${row.actual_qty}" readonly data-idx="${idx}">
+                                    </div>
+                                    <div class="col-2 d-flex align-items-center justify-content-end">
+                                        <input class="form-control input-xs text-right qty-input"
+                                            style="height: 24px; max-width: 80px; background: var(--bg-color);"
+                                            value="${row.qty}" data-idx="${idx}">
+                                    </div>
+                                    <div class="col-2 d-flex align-items-center justify-content-end">
+                                        <input class="form-control input-xs text-right rate-input"
+                                            style="height: 24px; max-width: 80px; background: var(--bg-color);"
+                                            value="${row.rate}" data-idx="${idx}">
+                                    </div>
+                                    <div class="col-2 d-flex align-items-center justify-content-center">
+                                        <a class="select-row" data-idx="${idx}" title="Seleccionar">
+                                            <svg class="icon text-primary" style="width:28px;height:28px;">
+                                                <use href="#icon-small-add"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+								});
+
+								html += `</div></div>`;
+								return html;
+							}
+
+							// Actualizar valores al editar inputs
+							d.$wrapper.on("input", ".qty-input", function () {
+								const idx = $(this).data("idx");
+								table_data[idx].qty = parseFloat($(this).val()) || 0;
+							});
+
+							d.$wrapper.on("input", ".rate-input", function () {
+								const idx = $(this).data("idx");
+								table_data[idx].rate = parseFloat($(this).val()) || 0;
+							});
+
+							// Acción al hacer clic en ➕
+							d.$wrapper.on("click", ".select-row", function () {
+								const idx = $(this).data("idx");
+								const selected = table_data[idx];
+
+								frappe.model.set_value(row.doctype, row.name, "warehouse", selected.warehouse);
+								frappe.model.set_value(row.doctype, row.name, "qty", selected.qty);
+								frappe.model.set_value(row.doctype, row.name, "rate", selected.rate);
+
+								d.hide();
+							});
+						}
+					}
+				});
+			};
 
 			refresh() {
 				super.refresh();
@@ -175,7 +386,8 @@ erpnext.sales_common = {
 				);
 			}
 
-			discount_amount(doc, cdt, cdn) {;
+			discount_amount(doc, cdt, cdn) {
+				;
 				if (doc.name === cdn) {
 					return;
 				}

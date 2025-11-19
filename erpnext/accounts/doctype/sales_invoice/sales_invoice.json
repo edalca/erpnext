@@ -238,6 +238,7 @@
   {
    "fieldname": "customer_section",
    "fieldtype": "Section Break",
+   "hide_border": 1,
    "hide_days": 1,
    "hide_seconds": 1,
    "options": "fa fa-user"
@@ -621,7 +622,8 @@
    "hide_seconds": 1,
    "label": "Source Warehouse",
    "options": "Warehouse",
-   "print_hide": 1
+   "print_hide": 1,
+   "width": "10"
   },
   {
    "fieldname": "items_section",
@@ -655,7 +657,6 @@
    "options": "Barcode"
   },
   {
-   "allow_bulk_edit": 1,
    "fieldname": "items",
    "fieldtype": "Table",
    "hide_days": 1,
@@ -2156,6 +2157,7 @@
   {
    "fieldname": "fiscal_information_section",
    "fieldtype": "Section Break",
+   "hide_border": 1,
    "label": "Fiscal Information"
   },
   {
@@ -2218,6 +2220,7 @@
   {
    "fieldname": "exempt_purchaser_data_section",
    "fieldtype": "Section Break",
+   "hide_border": 1,
    "label": "Exempt Purchaser Data"
   },
   {
@@ -2248,7 +2251,7 @@
    "link_fieldname": "consolidated_invoice"
   }
  ],
- "modified": "2025-11-17 01:09:15.078025",
+ "modified": "2025-11-18 15:34:59.218118",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Sales Invoice",

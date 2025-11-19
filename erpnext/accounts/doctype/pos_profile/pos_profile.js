@@ -28,7 +28,12 @@ frappe.ui.form.on("POS Profile", {
 		});
 
 		erpnext.queries.setup_queries(frm, "Warehouse", function () {
-			return erpnext.queries.warehouse(frm.doc);
+			return {
+				filters:[
+					["Warehouse", "is_group", "=", 1],
+					["Warehouse", "company", "=", frm.doc.company]
+				]
+			}
 		});
 
 		frm.set_query("print_format", function () {

@@ -367,10 +367,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 			&& !this.frm.doc.is_pos) {
 			frappe.after_ajax(() => this.calculate_taxes_and_totals());
 		}
-		if (frappe.meta.get_docfield(this.frm.doc.doctype + " Item", "item_code")) {
-			this.setup_item_selector();
-			this.frm.get_field("items").grid.set_multiple_add("item_code", "qty");
-		}
+	
 	}
 
 	refresh() {
